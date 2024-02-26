@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "MyCustomFont";
+  src: url(../fonts/Gilroy-Regular.ttf);
+}
+
 html,
 body {
   height: 100vh;
