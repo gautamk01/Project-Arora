@@ -7,11 +7,6 @@
   src: url(../fonts/Gilroy-Regular.ttf);
 }
 
-html,
-body {
-  height: 100vh;
-}
-
 *,
 *::before,
 *::after {
