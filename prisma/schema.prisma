@@ -133,6 +133,8 @@ model Agency {
   AddOns           AddOns[]
 }
 
+// SubAccounts => They are not paying subscription fee to us . Own by Agency ower 
+
 model SubAccount {
   id               String                    @id @default(uuid())
   connectAccountId String?                   @default("")
@@ -164,18 +166,24 @@ model SubAccount {
   @@index([agencyId])
 }
 
+//User ==> @relation(fields: [email], references: [email]): Specifies that the email field here relates 
+//         to the email field in the User model, creating a foreign key relationship.
+//         onDelete: Cascade: Indicates that if a related record in the User model is deleted, the corresponding 
+//         records in the Permissions model should also be deleted (this maintains data integrity). 
+//SubAccount => Act as a Forign key to SubAccount Model ,
 model Permissions {
-  id           String     @id @default(uuid())
-  email        String
-  User         User       @relation(fields: [email], references: [email], onDelete: Cascade)
-  subAccountId String
-  SubAccount   SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
-  access       Boolean
+  id           String     @id @default(uuid()) // Unique ID for each permission entry
+  email        String // Email address of the associated user
+  User         User       @relation(fields: [email], references: [email], onDelete: Cascade) // Defines relationship with User model
+  subAccountId String // ID of the associated sub-account
+  SubAccount   SubAccount @relation(fields: [subAccountId], references: [id], onDelete: Cascade) // Defines a relationship with the SubAccount model
+  access       Boolean // Flag to indicate if permission is granted or not
 
-  @@index([subAccountId])
-  @@index([email])
+  @@index([subAccountId]) // Improves search performance when filtering by subAccountId
+  @@index([email]) // Improves search performance when filtering by email
 }
 
+//For each ticket we can assigne tag
 model Tag {
   id           String   @id @default(uuid())
   name         String
@@ -190,6 +198,7 @@ model Tag {
   @@index([subAccountId])
 }
 
+//A pipeline entire convan board 
 model Pipeline {
   id           String     @id @default(uuid())
   name         String
@@ -202,6 +211,7 @@ model Pipeline {
   @@index([subAccountId])
 }
 
+//Each pipeline can have lane
 model Lane {
   id         String   @id @default(uuid())
   name       String
@@ -215,6 +225,7 @@ model Lane {
   @@index([pipelineId])
 }
 
+//Each Lane can have Ticket
 model Ticket {
   id          String   @id @default(uuid())
   name        String
@@ -301,6 +312,8 @@ model Action {
   @@index([automationId])
 }
 
+//*****/
+//multiple leads that come into each subaccount throught the Website 
 model Contact {
   id           String   @id @default(uuid())
   name         String
@@ -315,6 +328,7 @@ model Contact {
   @@index([subAccountId])
 }
 
+//For the media Bucket
 model Media {
   id           String     @id @default(uuid())
   type         String?
@@ -328,6 +342,7 @@ model Media {
   @@index([subAccountId])
 }
 
+//it is just a Website 
 model Funnel {
   id            String       @id @default(uuid())
   name          String
@@ -359,6 +374,7 @@ model ClassName {
   @@index([funnelId])
 }
 
+//each funnel have funnel page 
 model FunnelPage {
   id           String   @id @default(uuid())
   name         String
@@ -375,6 +391,8 @@ model FunnelPage {
   @@index([funnelId])
 }
 
+// in future if you wanted to give agency ower to hide the option for the subaccount for the perpouse of subscription 
+
 model AgencySidebarOption {
   id        String   @id @default(uuid())
   name      String   @default("Menu")
@@ -388,6 +406,8 @@ model AgencySidebarOption {
   @@index([agencyId])
 }
 
+//This is a subaccount SiderBar option 
+//
 model SubAccountSidebarOption {
   id           String      @id @default(uuid())
   name         String      @default("Menu")
@@ -395,12 +415,13 @@ model SubAccountSidebarOption {
   icon         Icon        @default(info)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  SubAccount   SubAccount? @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
+  SubAccount   SubAccount? @relation(fields: [subAccountId], references: [id], onDelete: Cascade) //the Subaccount where it is belongs to.
   subAccountId String?
 
   @@index([subAccountId])
 }
 
+//for an agency we can give the invitation to other users 
 enum InvitationStatus {
   ACCEPTED
   REVOKED
@@ -418,6 +439,7 @@ model Invitation {
   @@index([agencyId])
 }
 
+// belong to agency and subaccount 
 model Notification {
   id           String  @id @default(uuid())
   notification String
@@ -437,11 +459,13 @@ model Notification {
   @@index([userId])
 }
 
+//Pricing plan 
 enum Plan {
   price_1OYxkqFj9oKEERu1NbKUxXxN
   price_1OYxkqFj9oKEERu1KfJGWxgN
 }
 
+//Show that the user in paid plan or free plan
 model Subscription {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
@@ -461,6 +485,7 @@ model Subscription {
   @@index([customerId])
 }
 
+//upcomming challenge 
 model AddOns {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
