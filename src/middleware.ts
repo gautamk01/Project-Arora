@@ -6,15 +6,15 @@ export default authMiddleware({
   async beforeAuth(auth, req) {},
   async afterAuth(auth, req) {
     //rewrite for domains
-    const url = req.nextUrl;
-    const searchParams = url.searchParams.toString();
-    let hostname = req.headers;
+    const url = req.nextUrl; //Gets a NextUrl object representing the current URL of the request.
+    const searchParams = url.searchParams.toString(); //Converts any query parameters in the URL into a string format
+    let hostname = req.headers; //Gets the headers from the incoming request.
 
+    //Constructing the Full Path
+    //Concatenates the path from the URL (url.pathname) and, if there are query parameters, adds them (e.g., /somepath?param1=value1)
     const pathWithSearchParams = `${url.pathname}${
       searchParams.length > 0 ? `?${searchParams}` : ""
     }`;
-
-    console.log(searchParams);
 
     //if subdomain exists
     const customSubDomain = hostname
