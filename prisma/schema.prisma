@@ -440,6 +440,14 @@ model Invitation {
 }
 
 // belong to agency and subaccount 
+// id => generate a unique id
+// notification => what is the notification
+//agencyid => collect the agency id
+//subaccount => collect the subaccount id
+// userId => collect the user id
+// connecting user , Agency and subAccount table 
+//CreatedAT and updateAT 2 time stamp 
+
 model Notification {
   id           String  @id @default(uuid())
   notification String
