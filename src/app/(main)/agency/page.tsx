@@ -13,6 +13,9 @@ type Props = {};
  * A Subaccount Guest or Agency Guest can come to login
  * what if a user get a invitation
  */
+
+//search params exsiste we needed to send them to the billing page
+//state and code is mainly for the strip content
 const Page = async ({
   searchParams,
 }: {
