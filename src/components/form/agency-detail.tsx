@@ -3,17 +3,7 @@ import { Agency } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
+import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
 import {
   Card,
   CardContent,
@@ -37,8 +27,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import * as z from "zod"; //zod is schema validation librery
 import FileUpload from "../global/file-upload";
-import { Input } from "../ui/input";
-import { Switch } from "../ui/switch";
 
 import { NumberInput } from "@tremor/react";
 import {
@@ -56,20 +44,10 @@ type Props = {
   data?: Partial<Agency>; // this means that we are assigning a generic type to data as Agency
 };
 
+import { FormSchema } from "./Components/zod_form";
+import Formp from "./Components/Formp1";
+import Delete_section from "./Components/deleteForm";
 // Here using zod we are just assigning the validation to the form
-
-const FormSchema = z.object({
-  name: z.string().min(2, { message: "Agency name must be atleast 2 chars." }),
-  companyEmail: z.string().email(),
-  companyPhone: z.string().regex(/^\+?[0-9]{10,14}$/),
-  whiteLabel: z.boolean(),
-  address: z.string().min(1),
-  city: z.string().min(1),
-  zipCode: z.string().min(1),
-  state: z.string().min(1),
-  country: z.string().min(1),
-  agencyLogo: z.string().min(1),
-});
 
 // Agency Form
 const AgencyDetails = ({ data }: Props) => {
@@ -233,149 +211,7 @@ const AgencyDetails = ({ data }: Props) => {
                   </FormItem>
                 )}
               />
-              <div className="flex md:flex-row gap-4">
-                <FormField
-                  disabled={isLoading}
-                  control={form_validation.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Agency Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your agency name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form_validation.control}
-                  name="companyEmail"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Agency Email</FormLabel>
-                      <FormControl>
-                        <Input readOnly placeholder="Email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="flex md:flex-row gap-4">
-                <FormField
-                  disabled={isLoading}
-                  control={form_validation.control}
-                  name="companyPhone"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Agency Phone Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Phone" type="tel" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                disabled={isLoading}
-                control={form_validation.control}
-                name="whiteLabel"
-                render={({ field }) => {
-                  return (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border gap-4 p-4">
-                      <div>
-                        <FormLabel>Whitelabel Agency</FormLabel>
-                        <FormDescription>
-                          Turning on whilelabel mode will show your agency logo
-                          to all sub accounts by default. You can overwrite this
-                          functionality through sub account settings.
-                        </FormDescription>
-                      </div>
-
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                disabled={isLoading}
-                control={form_validation.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="123 st..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex md:flex-row gap-4">
-                <FormField
-                  disabled={isLoading}
-                  control={form_validation.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>City</FormLabel>
-                      <FormControl>
-                        <Input placeholder="City" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  disabled={isLoading}
-                  control={form_validation.control}
-                  name="state"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>State</FormLabel>
-                      <FormControl>
-                        <Input placeholder="State" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  disabled={isLoading}
-                  control={form_validation.control}
-                  name="zipCode"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Zipcpde</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Zipcode" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                disabled={isLoading}
-                control={form_validation.control}
-                name="country"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Country" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <Formp isLoading={isLoading} form_validation={form_validation} />
               {data?.id && (
                 <div className="flex flex-col gap-2">
                   <FormLabel>Create A Goal</FormLabel>
@@ -428,27 +264,10 @@ const AgencyDetails = ({ data }: Props) => {
               </AlertDialogTrigger>
             </div>
           )}
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-left">
-                Are you absolutely sure?
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-left">
-                This action cannot be undone. This will permanently delete the
-                Agency account and all related sub accounts.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="flex items-center">
-              <AlertDialogCancel className="mb-2">Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                disabled={deletingAgency}
-                className="bg-destructive hover:bg-destructive"
-                onClick={handleDeleteAgency}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
+          <Delete_section
+            deletingAgency={deleteAgency}
+            handleDeleteAgency={handleDeleteAgency}
+          />
         </CardContent>
       </Card>
     </AlertDialog>

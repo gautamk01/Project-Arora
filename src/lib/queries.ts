@@ -174,7 +174,6 @@ export const createTeamUser = async (agencyId: string, user: User) => {
 export const verifyAndAcceptInvitation = async () => {
   const user = await currentUser();
   if (!user) return redirect("/sign-in");
-
   //in this part when a agenecy ower or subaccount user give a email to person who can access the account
   // So they don't wanted to register as a new Agency correct ,
   // They just wanted to go that Agency account or that sub account dashbord
@@ -232,6 +231,7 @@ export const verifyAndAcceptInvitation = async () => {
   // Then we needed to Perform Activity logs
 };
 
+//For UdateAgencyDetails mainly used in Agency Formss
 export const updateAgencyDetails = async (
   agencyId: string,
   agencyDetails: Partial<Agency>
@@ -243,11 +243,13 @@ export const updateAgencyDetails = async (
   return response;
 };
 
+//For Deleting the Agency mainly used in Agency Forms
 export const deleteAgency = async (agencyId: string) => {
   const response = await db.agency.delete({ where: { id: agencyId } });
   return response;
 };
 
+//
 export const initUser = async (newUser: Partial<User>) => {
   const user = await currentUser();
   if (!user) return;
@@ -275,6 +277,7 @@ export const initUser = async (newUser: Partial<User>) => {
   return userData;
 };
 
+//Creating the Agencu Side bar
 export const upsertAgency = async (agency: Agency, price?: Plan) => {
   if (!agency.companyEmail) return null;
   try {
@@ -283,6 +286,7 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
         id: agency.id,
       },
       update: agency,
+      //Here starts the Create agency section
       create: {
         users: {
           connect: { email: agency.companyEmail },
@@ -325,6 +329,22 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
       },
     });
     return agencyDetails;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Getting Notification of a specific Agency
+export const getNotificationAndUser = async (agencyId: string) => {
+  try {
+    const response = await db.notification.findMany({
+      where: { agencyId },
+      include: { User: true },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return response;
   } catch (error) {
     console.log(error);
   }

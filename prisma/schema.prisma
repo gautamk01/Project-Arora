@@ -108,28 +108,31 @@ model User {
 //               This likely requires a junction table and an 'add-ons' table.
 
 model Agency {
-  id               String                @id @default(uuid())
-  connectAccountId String?               @default("")
+  id               String  @id @default(uuid())
+  connectAccountId String? @default("")
   name             String
-  agencyLogo       String                @db.Text
-  companyEmail     String                @db.Text
+  agencyLogo       String  @db.Text
+  companyEmail     String  @db.Text
   companyPhone     String
-  whiteLabel       Boolean               @default(true)
+  whiteLabel       Boolean @default(true)
   address          String
   city             String
   zipCode          String
   state            String
   country          String
-  goal             Int                   @default(5)
-  users            User[]
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  SubAccount       SubAccount[]
-  SidebarOption    AgencySidebarOption[]
-  Invitation       Invitation[]
-  Notification     Notification[]
-  Subscription     Subscription?
-  AddOns           AddOns[]
+  goal             Int     @default(5)
+
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  SubAccount    SubAccount[]
+  SidebarOption AgencySidebarOption[]
+  Invitation    Invitation[]
+  Notification  Notification[]
+  Subscription  Subscription?
+  AddOns        AddOns[]
 }
 
 // SubAccounts => They are not paying subscription fee to us . Own by Agency ower 
@@ -408,12 +411,15 @@ model AgencySidebarOption {
 //This is a subaccount SiderBar option 
 //
 model SubAccountSidebarOption {
-  id           String      @id @default(uuid())
-  name         String      @default("Menu")
-  link         String      @default("#")
-  icon         Icon        @default(info)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id   String @id @default(uuid())
+  name String @default("Menu")
+  link String @default("#")
+
+  icon Icon @default(info)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   SubAccount   SubAccount? @relation(fields: [subAccountId], references: [id], onDelete: Cascade) //the Subaccount where it is belongs to.
   subAccountId String?
 
@@ -428,12 +434,14 @@ enum InvitationStatus {
 }
 
 model Invitation {
-  id       String           @id @default(uuid())
-  email    String           @unique
+  id       String @id @default(uuid())
+  email    String @unique
   agencyId String
-  Agency   Agency           @relation(fields: [agencyId], references: [id], onDelete: Cascade)
-  status   InvitationStatus @default(PENDING)
-  role     Role             @default(SUBACCOUNT_USER)
+
+  Agency Agency @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  status InvitationStatus @default(PENDING)
+  role   Role             @default(SUBACCOUNT_USER)
 
   @@index([agencyId])
 }

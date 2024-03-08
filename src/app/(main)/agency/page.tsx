@@ -23,7 +23,7 @@ const Page = async ({
 }) => {
   //what if user is sent an invitation
   const agencyId = await verifyAndAcceptInvitation();
-  console.log(agencyId);
+  console.log("agency id : ", agencyId);
   //get user details
   const user = await getAuthUserDetails();
   //if there is no data we need to promopt with create the agency account
