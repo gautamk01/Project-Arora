@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Agency,
   AgencySidebarOption,
   SubAccount,
   SubAccountSidebarOption,
@@ -8,7 +9,7 @@ import {
 import React, { useState, useEffect, useMemo } from "react";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { ChevronsUpDown, Menu } from "lucide-react";
+import { ChevronsUpDown, Menu, PlusCircleIcon } from "lucide-react";
 import clsx from "clsx";
 import { AspectRatio } from "../ui/aspect-ratio";
 import Image from "next/image";
@@ -23,6 +24,11 @@ import {
   CommandList,
 } from "../ui/command";
 import Link from "next/link";
+import CustomModal from "../global/custom-modal";
+import { useModal } from "@/provider/modal-provider";
+import SubAccountDetails from "../form/subaccount-details";
+import { Separator } from "../ui/separator";
+import { icons } from "@/lib/constants";
 
 type Props = {
   defaultOpen?: boolean;
@@ -44,6 +50,7 @@ const MenuOption = ({
   defaultOpen,
 }: Props) => {
   const [isMounted, setIsMounted] = useState(false); // to avoid Hydration error
+  const { setOpen } = useModal(); //Calling from the Provider
 
   //UseMemo is like a Caching System that willl help to improve the performance,when there is a change in defaultOpen
   //then only this function works
@@ -127,6 +134,7 @@ const MenuOption = ({
                       // agency Section
                       <CommandGroup heading="Agency">
                         <CommandItem className="!bg-transparent my-2 text-primary broder-[1px] border-border p-2 rounded-md hover:!bg-muted cursor-pointer transition-all">
+                          {/* defaultOpen is true then it is for desktop view , but if it is close then it is for mobile view */}
                           {defaultOpen ? (
                             <Link
                               href={`/agency/${user?.Agency?.id}`}
@@ -148,6 +156,7 @@ const MenuOption = ({
                               </div>
                             </Link>
                           ) : (
+                            //we use SheetClose so that when you click the button the sheet will close
                             <SheetClose asChild>
                               <Link
                                 href={`/agency/${user?.Agency?.id}`}
@@ -228,7 +237,7 @@ const MenuOption = ({
                 {(user?.role === "AGENCY_OWNER" ||
                   user?.role === "AGENCY_ADMIN") && (
                   <SheetClose>
-                    {/* <Button
+                    <Button
                       className="w-full flex gap-2"
                       onClick={() => {
                         setOpen(
@@ -242,17 +251,52 @@ const MenuOption = ({
                               userName={user?.name}
                             />
                           </CustomModal>
-                        )
+                        );
                       }}
                     >
                       <PlusCircleIcon size={15} />
                       Create Sub Account
-                    </Button> */}
+                    </Button>
                   </SheetClose>
                 )}
               </Command>
             </PopoverContent>
           </Popover>
+          <p className="text-muted-foreground text-xs mb-2">MENU LINKS</p>
+          <Separator className="mb-4" />
+          <nav className="relative">
+            <Command className="rounded-lg overflow-visible bg-transparent">
+              <CommandInput placeholder="Search..." />
+              <CommandList className="py-4 overflow-visible">
+                <CommandEmpty>No Results Found</CommandEmpty>
+                <CommandGroup className="overflow-visible">
+                  {sidebarOpt.map((sidebarOptions) => {
+                    let val;
+                    const result = icons.find(
+                      (icon) => icon.value === sidebarOptions.icon
+                    );
+                    if (result) {
+                      val = <result.path />;
+                    }
+                    return (
+                      <CommandItem
+                        key={sidebarOptions.id}
+                        className="md:w-[320px] w-full"
+                      >
+                        <Link
+                          href={sidebarOptions.link}
+                          className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px]"
+                        >
+                          {val}
+                          <span>{sidebarOptions.name}</span>
+                        </Link>
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </nav>
         </div>
       </SheetContent>
     </Sheet>
