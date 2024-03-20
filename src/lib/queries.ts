@@ -2,7 +2,7 @@
 import { clerkClient, currentUser } from "@clerk/nextjs";
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, Plan, SubAccount, User } from "@prisma/client";
+import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
 import { v4 } from "uuid";
 
 //then only this will become a server action file
@@ -500,4 +500,71 @@ export const deleteSubAccount = async (subaccountId: string) => {
     },
   });
   return response;
+};
+
+//Mainly for team section for the agency
+export const deleteUser = async (userId: string) => {
+  await clerkClient.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      role: undefined,
+    },
+  });
+  const deletedUser = await db.user.delete({ where: { id: userId } });
+
+  return deletedUser;
+};
+export const getUser = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return user;
+};
+
+//Parameters are Role, email and agencyId
+
+export const sendInvitation = async (
+  role: Role,
+  email: string,
+  agencyId: string
+) => {
+  //this will create a record in the invitation table
+  const resposne = await db.invitation.create({
+    data: { email, agencyId, role },
+  });
+
+  //when we store invivtation whenever thay are new to this invitation
+  //check if they have an invitaiton
+  // our entire saas application only allow one agency per email address
+
+  try {
+    //Cleck auth has an actuall as an email secuences
+    //sending email  using clerk auth
+    const invitation = await clerkClient.invitations.createInvitation({
+      emailAddress: email,
+      redirectUrl: process.env.NEXT_PUBLIC_URL,
+      publicMetadata: {
+        throughInvitation: true,
+        role,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+
+  return resposne;
+};
+
+export const getMedia = async (subaccountId: string) => {
+  //get the details  of media info
+  const mediafiles = await db.subAccount.findUnique({
+    where: {
+      id: subaccountId,
+    },
+    include: { Media: true },
+  });
+  return mediafiles;
 };

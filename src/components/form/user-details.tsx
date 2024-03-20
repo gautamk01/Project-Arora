@@ -62,21 +62,21 @@ type Props = {
 const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
   const [subAccountPermissions, setSubAccountsPermissions] =
     useState<UserWithPermissionsAndSubAccounts | null>(null);
+
   const { data, setClose } = useModal();
   const [roleState, setRoleState] = useState("");
   const [loadingPermissions, setLoadingPermissions] = useState(false);
-  const { toast } = useToast();
-  const router = useRouter();
   const [authUserData, setAuthUserData] =
     useState<AuthUserWithAgencySigebarOptionsSubAccounts | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
 
-  //get authUserDetails
+  //Get authUSerDtails
 
   useEffect(() => {
     if (data.user) {
       const fetchDetails = async () => {
         const response = await getAuthUserDetails();
-        //when this component render we will have all the data stored directly here
         if (response) setAuthUserData(response);
       };
       fetchDetails();
@@ -176,12 +176,8 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
     setLoadingPermissions(false);
   };
 
-  //saving the user infromation
-  //upsert meaning - update when it have the user details or create when user don't have the data
-
   const onSubmit = async (values: z.infer<typeof userDataSchema>) => {
     if (!id) return;
-    //if the user data or data.user exsiste
     if (userData || data?.user) {
       const updatedUser = await updateUser(values);
       authUserData?.Agency?.SubAccount.filter((subacc) =>
@@ -189,14 +185,13 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
           (p) => p.subAccountId === subacc.id && p.access
         )
       ).forEach(async (subaccount) => {
-        //for each subaccount we are give the updated log
         await saveActivityLogsNotification({
           agencyId: undefined,
           description: `Updated ${userData?.name} information`,
           subaccountId: subaccount.id,
         });
       });
-      //updated user
+
       if (updatedUser) {
         toast({
           title: "Success",
@@ -211,9 +206,7 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
           description: "Could not update user information",
         });
       }
-    }
-    //if there is an error in update
-    else {
+    } else {
       console.log("Error could not submit");
     }
   };
@@ -360,7 +353,7 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
                         <div>
                           <p>{subAccount.name}</p>
                         </div>
-                        {/* <Switch
+                        <Switch
                           disabled={loadingPermissions}
                           checked={subAccountPermissionsDetails?.access}
                           onCheckedChange={(permission) => {
@@ -368,9 +361,9 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
                               subAccount.id,
                               permission,
                               subAccountPermissionsDetails?.id
-                            )
+                            );
                           }}
-                        /> */}
+                        />
                       </div>
                     );
                   })}
