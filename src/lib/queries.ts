@@ -4,6 +4,7 @@ import { db } from "./db";
 import { redirect } from "next/navigation";
 import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
 import { v4 } from "uuid";
+import { CreateMediaType } from "./type";
 
 //then only this will become a server action file
 
@@ -524,7 +525,6 @@ export const getUser = async (id: string) => {
 };
 
 //Parameters are Role, email and agencyId
-
 export const sendInvitation = async (
   role: Role,
   email: string,
@@ -567,4 +567,20 @@ export const getMedia = async (subaccountId: string) => {
     include: { Media: true },
   });
   return mediafiles;
+};
+
+//for the media section in subaccount
+
+export const createMedia = async (
+  subaccountId: string,
+  mediafiles: CreateMediaType
+) => {
+  const response = await db.media.create({
+    data: {
+      link: mediafiles.link,
+      name: mediafiles.name,
+      subAccountId: subaccountId,
+    },
+  });
+  return response;
 };

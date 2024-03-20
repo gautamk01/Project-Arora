@@ -11,7 +11,18 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Form } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { createMedia, saveActivityLogsNotification } from "@/lib/queries";
+import { Input } from "../ui/input";
+import FileUpload from "../global/file-upload";
+import { Button } from "../ui/button";
 
 type Props = {
   subaccountId: string;
@@ -35,13 +46,25 @@ const UploadMediaForm = ({ subaccountId }: Props) => {
     },
   });
 
-  //   async function onSubmit(values: z.infer<typeof formSchema>){
-  //     try {
-  //         const response = await createMedia()
-  //     } catch (error) {
-
-  //     }
-  //   }
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await createMedia(subaccountId, values);
+      await saveActivityLogsNotification({
+        agencyId: undefined,
+        description: `Uploaded the Media file | ${response.name}`,
+        subaccountId: subaccountId,
+      });
+      toast({ title: "success ", description: "Uploaded the Media file " });
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Failed ",
+        description: "There is some error found in Uploading the file  ",
+      });
+    }
+  }
 
   return (
     <Card className="w-full">
@@ -53,7 +76,42 @@ const UploadMediaForm = ({ subaccountId }: Props) => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}></form>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>File Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your agency name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Media File</FormLabel>
+                  <FormControl>
+                    <FileUpload
+                      apiEndpoint="subaccountLogo"
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="mt-4">
+              Upload Media
+            </Button>
+          </form>
         </Form>
       </CardContent>
     </Card>
