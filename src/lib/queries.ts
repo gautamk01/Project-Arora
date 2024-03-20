@@ -570,7 +570,7 @@ export const getMedia = async (subaccountId: string) => {
 };
 
 //for the media section in subaccount
-
+// For uploading the Media
 export const createMedia = async (
   subaccountId: string,
   mediafiles: CreateMediaType
@@ -580,6 +580,16 @@ export const createMedia = async (
       link: mediafiles.link,
       name: mediafiles.name,
       subAccountId: subaccountId,
+    },
+  });
+  return response;
+};
+
+//for Deleting the Media
+export const deleteMedia = async (mediaId: string) => {
+  const response = await db.media.delete({
+    where: {
+      id: mediaId,
     },
   });
   return response;
