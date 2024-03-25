@@ -44,7 +44,6 @@ async function PipelinePage({ params }: Props) {
         </div>
       </TabsList>
       <TabsContent value="view">
-        <div>view section</div>
         <PipelineView
           lanes={lanes}
           pipelineDetails={pipelineDetails}
