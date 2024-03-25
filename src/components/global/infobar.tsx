@@ -36,7 +36,6 @@ export const InfoBar = ({
 
   const handleClick = () => {
     if (!showAll) {
-      console.log("THi sis ");
       setAllNotifications(notifications);
     } else {
       if (notifications?.length !== 0) {

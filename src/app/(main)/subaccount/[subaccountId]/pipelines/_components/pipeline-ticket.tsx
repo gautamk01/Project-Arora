@@ -128,7 +128,6 @@ const PipelineTicket = ({
             left: x,
           };
         }
-        //
         return (
           <div
             {...provided.draggableProps}
@@ -138,7 +137,6 @@ const PipelineTicket = ({
             <AlertDialog>
               <DropdownMenu>
                 <Card className="my-4 dark:bg-slate-900 bg-white shadow-none transition-all">
-                  {/* Card title */}
                   <CardHeader className="p-[12px]">
                     <CardTitle className="flex items-center justify-between">
                       <span className="text-lg w-full">{ticket.name}</span>
@@ -185,7 +183,6 @@ const PipelineTicket = ({
                             </p>
                             <div className="flex items-center pt-2">
                               <Contact2 className="mr-2 h-4 w-4 opacity-70" />
-                              {/* icon */}
                               <span className="text-xs text-muted-foreground">
                                 Joined{" "}
                                 {ticket.Customer?.createdAt.toLocaleDateString()}
@@ -196,7 +193,6 @@ const PipelineTicket = ({
                       </HoverCardContent>
                     </HoverCard>
                   </CardHeader>
-                  {/* Card footer section */}
                   <CardFooter className="m-0 p-2 border-t-[1px] border-muted-foreground/20 flex items-center justify-between">
                     <div className="flex item-center gap-2">
                       <Avatar className="w-8 h-8">
@@ -230,7 +226,6 @@ const PipelineTicket = ({
                         }).format(+ticket.value)}
                     </span>
                   </CardFooter>
-
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Options</DropdownMenuLabel>
                     <DropdownMenuSeparator />

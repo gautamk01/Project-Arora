@@ -1,7 +1,6 @@
 import AgencyDetails from "@/components/form/agency-detail";
 import { getAuthUserDetails, verifyAndAcceptInvitation } from "@/lib/queries";
 import { currentUser } from "@clerk/nextjs";
-import { Plan } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -19,7 +18,7 @@ type Props = {};
 const Page = async ({
   searchParams,
 }: {
-  searchParams: { plan: Plan; state: string; code: string };
+  searchParams: { state: string; code: string };
 }) => {
   //what if user is sent an invitation
   const agencyId = await verifyAndAcceptInvitation();
@@ -36,11 +35,11 @@ const Page = async ({
     //if the user is agency ower then we needed to do something else
     else if (user?.role === "AGENCY_OWNER" || user?.role === "AGENCY_ADMIN") {
       // we are redirecting them to the Builling plan
-      if (searchParams.plan) {
-        return redirect(
-          `/agency/${agencyId}/billing?plan=${searchParams.plan}`
-        );
-      }
+      // if (searchParams.plan) {
+      //   return redirect(
+      //     `/agency/${agencyId}/billing?plan=${searchParams.plan}`
+      //   );
+      // }
 
       //Strip integration work ......
       if (searchParams.state) {

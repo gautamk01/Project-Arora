@@ -25,7 +25,7 @@ const PipelinePage = async ({ params }: Props) => {
       `/subaccount/${params.subaccountId}/pipelines/${response.id}`
     );
   } catch (error) {
-    console.log();
+    console.log("error");
   }
 };
 

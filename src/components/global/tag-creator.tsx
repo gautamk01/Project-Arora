@@ -171,7 +171,6 @@ const TagCreator = ({ getSelectedTags, subAccountId, defaultTags }: Props) => {
               selectedColor={setSelectedColor}
               title=""
               colorName={colorName}
-              giving={selectedColor}
             />
           ))}
         </div>
