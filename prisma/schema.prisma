@@ -131,8 +131,6 @@ model Agency {
   SidebarOption AgencySidebarOption[]
   Invitation    Invitation[]
   Notification  Notification[]
-  Subscription  Subscription?
-  AddOns        AddOns[]
 }
 
 // SubAccounts => They are not paying subscription fee to us . Own by Agency ower 
@@ -159,8 +157,6 @@ model SubAccount {
   Funnels          Funnel[]
   Media            Media[]
   Contact          Contact[]
-  Trigger          Trigger[]
-  Automation       Automation[]
   Pipeline         Pipeline[]
   Tags             Tag[]
   Notification     Notification[]
@@ -251,68 +247,69 @@ model Ticket {
   @@index([assignedUserId])
 }
 
-enum TriggerTypes {
-  CONTACT_FORM
-}
+//these are 
+// enum TriggerTypes {
+//   CONTACT_FORM
+// }
 
-model Trigger {
-  id           String       @id @default(uuid())
-  name         String
-  type         TriggerTypes
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  subAccountId String
-  Subaccount   SubAccount   @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
-  Automations  Automation[]
+// model Trigger {
+//   id           String       @id @default(uuid())
+//   name         String
+//   type         TriggerTypes
+//   createdAt    DateTime     @default(now())
+//   updatedAt    DateTime     @updatedAt
+//   subAccountId String
+//   Subaccount   SubAccount   @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
+//   Automations  Automation[]
 
-  @@index([subAccountId])
-}
+//   @@index([subAccountId])
+// }
 
-model Automation {
-  id                 String               @id @default(uuid())
-  name               String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  triggerId          String?
-  published          Boolean              @default(false)
-  Trigger            Trigger?             @relation(fields: [triggerId], references: [id], onDelete: Cascade)
-  subAccountId       String
-  Subaccount         SubAccount           @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
-  Action             Action[]
-  AutomationInstance AutomationInstance[]
+// model Automation {
+//   id                 String               @id @default(uuid())
+//   name               String
+//   createdAt          DateTime             @default(now())
+//   updatedAt          DateTime             @updatedAt
+//   triggerId          String?
+//   published          Boolean              @default(false)
+//   Trigger            Trigger?             @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+//   subAccountId       String
+//   Subaccount         SubAccount           @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
+//   Action             Action[]
+//   AutomationInstance AutomationInstance[]
 
-  @@index([triggerId])
-  @@index([subAccountId])
-}
+//   @@index([triggerId])
+//   @@index([subAccountId])
+// }
 
-model AutomationInstance {
-  id           String     @id @default(uuid())
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  automationId String
-  Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
-  active       Boolean    @default(false)
+// model AutomationInstance {
+//   id           String     @id @default(uuid())
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+//   automationId String
+//   Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+//   active       Boolean    @default(false)
 
-  @@index([automationId])
-}
+//   @@index([automationId])
+// }
 
-enum ActionType {
-  CREATE_CONTACT
-}
+// enum ActionType {
+//   CREATE_CONTACT
+// }
 
-model Action {
-  id           String     @id @default(uuid())
-  name         String
-  type         ActionType
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  automationId String
-  order        Int
-  Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
-  laneId       String     @default("0")
+// model Action {
+//   id           String     @id @default(uuid())
+//   name         String
+//   type         ActionType
+//   createdAt    DateTime   @default(now())
+//   updatedAt    DateTime   @updatedAt
+//   automationId String
+//   order        Int
+//   Automation   Automation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+//   laneId       String     @default("0")
 
-  @@index([automationId])
-}
+//   @@index([automationId])
+// }
 
 //*****/
 //multiple leads that come into each subaccount throught the Website 
@@ -480,36 +477,36 @@ enum Plan {
   price_1OYxkqFj9oKEERu1KfJGWxgN
 }
 
-//Show that the user in paid plan or free plan
-model Subscription {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  plan      Plan?
-  price     String?
-  active    Boolean  @default(false)
+// //Show that the user in paid plan or free plan
+// model Subscription {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   plan      Plan?
+//   price     String?
+//   active    Boolean  @default(false)
 
-  priceId              String
-  customerId           String
-  currentPeriodEndDate DateTime
-  subscritiptionId     String   @unique
+//   priceId              String
+//   customerId           String
+//   currentPeriodEndDate DateTime
+//   subscritiptionId     String   @unique
 
-  agencyId String? @unique
-  Agency   Agency? @relation(fields: [agencyId], references: [id])
+//   agencyId String? @unique
+//   Agency   Agency? @relation(fields: [agencyId], references: [id])
 
-  @@index([customerId])
-}
+//   @@index([customerId])
+// }
 
-//upcomming challenge 
-model AddOns {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  active    Boolean  @default(false)
-  priceId   String   @unique
-  agencyId  String?
-  Agency    Agency?  @relation(fields: [agencyId], references: [id])
+// //upcomming challenge 
+// model AddOns {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   name      String
+//   active    Boolean  @default(false)
+//   priceId   String   @unique
+//   agencyId  String?
+//   Agency    Agency?  @relation(fields: [agencyId], references: [id])
 
-  @@index([agencyId])
-}
+//   @@index([agencyId])
+// }

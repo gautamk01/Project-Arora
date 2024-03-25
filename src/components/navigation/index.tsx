@@ -39,8 +39,6 @@ const Navigation = ({ user }: Props) => {
         </Link>
         <UserButton />
         <ModeToggle />
-        {/* <UserButton />
-        <ModeToggle /> */}
       </aside>
     </div>
   );

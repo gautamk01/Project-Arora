@@ -2,9 +2,14 @@
 import { clerkClient, currentUser } from "@clerk/nextjs";
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, Plan, Role, SubAccount, User } from "@prisma/client";
+import { Agency, Prisma, Role, SubAccount, User } from "@prisma/client";
 import { v4 } from "uuid";
-import { CreateMediaType } from "./type";
+import {
+  CreateFunnelFormSchema,
+  CreateMediaType,
+  CreatePipelineFormSchema,
+} from "./type";
+import { z } from "zod";
 
 //then only this will become a server action file
 
@@ -280,7 +285,7 @@ export const initUser = async (newUser: Partial<User>) => {
 };
 
 //Creating the Agencu Side bar
-export const upsertAgency = async (agency: Agency, price?: Plan) => {
+export const upsertAgency = async (agency: Agency) => {
   if (!agency.companyEmail) return null;
   try {
     const agencyDetails = await db.agency.upsert({
@@ -591,6 +596,76 @@ export const deleteMedia = async (mediaId: string) => {
     where: {
       id: mediaId,
     },
+  });
+  return response;
+};
+
+//++++++++++++++++++++++++++++++++++Pipeline query section/+++++++++++++++++++++++++++++++++++++
+
+export const getPipelineDetails = async (pipelineId: string) => {
+  const response = await db.pipeline.findUnique({
+    where: {
+      id: pipelineId,
+    },
+  });
+  return response;
+};
+
+export const getLanesWithTicketAndTags = async (pipelineId: string) => {
+  const response = await db.lane.findMany({
+    where: {
+      pipelineId,
+    },
+    orderBy: { order: "asc" },
+    include: {
+      Tickets: {
+        orderBy: {
+          order: "asc",
+        },
+        include: {
+          Tags: true,
+          Assigned: true,
+          Customer: true,
+        },
+      },
+    },
+  });
+  return response;
+};
+
+export const upsertFunnel = async (
+  subaccountId: string,
+  funnel: z.infer<typeof CreateFunnelFormSchema> & { liveProducts: string },
+  funnelId: string
+) => {
+  const response = await db.funnel.upsert({
+    where: { id: funnelId },
+    update: funnel,
+    create: {
+      ...funnel,
+      id: funnelId || v4(),
+      subAccountId: subaccountId,
+    },
+  });
+
+  return response;
+};
+
+export const upsertPipeline = async (
+  pipeline: Prisma.PipelineUncheckedCreateWithoutLaneInput
+) => {
+  const response = await db.pipeline.upsert({
+    where: { id: pipeline.id || v4() },
+    update: pipeline,
+    create: pipeline,
+  });
+
+  return response;
+};
+
+export const deletePipeline = async (pipelineId: string) => {
+  const response = await db.pipeline.delete({
+    where: { id: pipelineId },
   });
   return response;
 };

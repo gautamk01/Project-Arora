@@ -36,6 +36,7 @@ export const InfoBar = ({
 
   const handleClick = () => {
     if (!showAll) {
+      console.log("THi sis ");
       setAllNotifications(notifications);
     } else {
       if (notifications?.length !== 0) {
@@ -43,8 +44,10 @@ export const InfoBar = ({
           notifications?.filter((item) => item.subAccountId === subAccountId) ??
             []
         );
+        console.log(notifications?.length);
       }
     }
+    console.log("Hello");
     setShowAll((prev) => !prev);
   };
 
@@ -71,7 +74,7 @@ export const InfoBar = ({
                   {(role === "AGENCY_ADMIN" || role === "AGENCY_OWNER") && (
                     <Card className="flex items-center justify-between p-4">
                       Current Subaccount
-                      <Switch onCheckedChange={handleClick} />
+                      <Switch checked={showAll} onCheckedChange={handleClick} />
                     </Card>
                   )}
                 </SheetDescription>
@@ -79,7 +82,7 @@ export const InfoBar = ({
               {allNotifications?.map((notification) => (
                 <div
                   key={notification.id}
-                  className="flex flex-col gap-y-2 mb-2 overflow-x-scroll text-ellipsis"
+                  className="flex flex-col gap-y-2 mb-2 text-ellipsis"
                 >
                   <div className="flex gap-2">
                     <Avatar>

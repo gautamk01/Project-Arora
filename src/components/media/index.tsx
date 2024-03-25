@@ -9,6 +9,7 @@ import {
   CommandList,
 } from "../ui/command";
 import MediaCard from "./media-card";
+import { FolderSearch, FolderSearch2 } from "lucide-react";
 
 type Props = {
   data: GetMediaFiles;
@@ -35,6 +36,17 @@ const MediaComponent = ({ data, subaccountId }: Props) => {
                 <MediaCard file={file} />
               </CommandItem>
             ))}
+            {!data?.Media.length && (
+              <div className="flex items-center justify-center w-full flex-col">
+                <FolderSearch
+                  size={200}
+                  className="dark:text-muted text-slate-300"
+                />
+                <p className="text-muted-foreground ">
+                  Empty! no files to show.
+                </p>
+              </div>
+            )}
           </div>
         </CommandList>
       </Command>
