@@ -48,6 +48,7 @@ import { Button } from "../ui/button";
 import Loading from "../global/loading";
 import { cn } from "@/lib/utils";
 import { toast } from "../ui/use-toast";
+import TagCreator from "../global/tag-creator";
 
 type Props = {
   laneId: string;
@@ -147,7 +148,7 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full ">
       <CardHeader>
         <CardTitle>Ticket Details</CardTitle>
       </CardHeader>
@@ -157,6 +158,7 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
+            {/* ticket Name feild */}
             <FormField
               disabled={isLoading}
               control={form.control}
@@ -171,6 +173,7 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
                 </FormItem>
               )}
             />
+            {/* Ticket Description */}
             <FormField
               disabled={isLoading}
               control={form.control}
@@ -185,6 +188,7 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
                 </FormItem>
               )}
             />
+            {/* Value of Ticket  */}
             <FormField
               disabled={isLoading}
               control={form.control}
@@ -200,13 +204,15 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
               )}
             />
             <h3>Add tags</h3>
-            {/* <TagCreator
+            <TagCreator
               subAccountId={subaccountId}
               getSelectedTags={setTags}
               defaultTags={defaultData.ticket?.Tags || []}
-            /> */}
+            />
             <FormLabel>Assigned To Team Member</FormLabel>
+            {/* assign the creator */}
             <Select onValueChange={setAssignedTo} defaultValue={assignedTo}>
+              {/* select trigger section */}
               <SelectTrigger>
                 <SelectValue
                   placeholder={
@@ -225,7 +231,9 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
                   }
                 />
               </SelectTrigger>
+              {/* select content section  */}
               <SelectContent>
+                {/* itrate over most of the Team members  */}
                 {allTeamMembers.map((teamMember) => (
                   <SelectItem key={teamMember.id} value={teamMember.id}>
                     <div className="flex items-center gap-2">
@@ -244,6 +252,7 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
                 ))}
               </SelectContent>
             </Select>
+            {/* customer section in the form */}
             <FormLabel>Customer</FormLabel>
             <Popover>
               <PopoverTrigger asChild className="w-full">
@@ -252,6 +261,7 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
                   role="combobox"
                   className="justify-between"
                 >
+                  {/* if the contact exsiste then we have to show the name */}
                   {contact
                     ? contactList.find((c) => c.id === contact)?.name
                     : "Select Customer..."}
@@ -260,12 +270,18 @@ const TicketForm = ({ laneId, subaccountId, getNewTicket }: Props) => {
               </PopoverTrigger>
               <PopoverContent className="w-[400px] p-0">
                 <Command>
+                  {/* search bar */}
                   <CommandInput
                     placeholder="Search..."
                     className="h-9"
                     value={search}
                     onChangeCapture={async (value) => {
                       //@ts-ignore
+                      //when you make a search we create a timer
+                      // and when the timer expire it search for the result
+                      //if you make the change before the timer expires ,
+                      //we will clear the old timer and  create a new timer
+
                       setSearch(value.target.value);
                       if (saveTimerRef.current)
                         clearTimeout(saveTimerRef.current);

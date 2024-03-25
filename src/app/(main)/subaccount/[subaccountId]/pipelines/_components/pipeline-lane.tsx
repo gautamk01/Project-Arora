@@ -122,7 +122,11 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
       index={index}
       key={laneDetails.id}
     >
+      {/* //function for draggable */}
       {(provided, snapshot) => {
+        // there is a problem in react-beautiful-dnd
+        //when we have absolute container it will snaps to some other location in the page
+        //so we needed to manually push around
         if (snapshot.isDragging) {
           //@ts-ignore
           const offset = { x: 300, y: 0 };
@@ -143,6 +147,7 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
             ref={provided.innerRef}
             className="h-full"
           >
+            {/* this is just a component that has a 1. dropdown 2.delete 3.edit and 4.ticket */}
             <AlertDialog>
               <DropdownMenu>
                 <div className="bg-slate-200/30 dark:bg-background/20  h-[700px] w-[300px] px-4 relative rounded-lg overflow-visible flex-shrink-0 ">
@@ -178,7 +183,7 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                     type="ticket"
                   >
                     {(provided) => (
-                      <div className=" max-h-[700px] overflow-scroll pt-12 ">
+                      <div className=" max-h-[700px] overflow-auto pt-12 ">
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
