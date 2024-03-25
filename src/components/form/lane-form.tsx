@@ -40,7 +40,7 @@ interface CreateLaneFormProps {
   pipelineId: string;
 }
 
-const LaneForm: React.FC<CreateLaneFormProps> = ({
+const CreateLaneForm: React.FC<CreateLaneFormProps> = ({
   defaultData,
   pipelineId,
 }) => {
@@ -134,4 +134,4 @@ const LaneForm: React.FC<CreateLaneFormProps> = ({
   );
 };
 
-export default LaneForm;
+export default CreateLaneForm;
