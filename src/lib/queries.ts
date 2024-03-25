@@ -2,7 +2,15 @@
 import { clerkClient, currentUser } from "@clerk/nextjs";
 import { db } from "./db";
 import { redirect } from "next/navigation";
-import { Agency, Prisma, Role, SubAccount, User } from "@prisma/client";
+import {
+  Agency,
+  Lane,
+  Prisma,
+  Role,
+  SubAccount,
+  Ticket,
+  User,
+} from "@prisma/client";
 import { v4 } from "uuid";
 import {
   CreateFunnelFormSchema,
@@ -668,4 +676,46 @@ export const deletePipeline = async (pipelineId: string) => {
     where: { id: pipelineId },
   });
   return response;
+};
+
+//Pipeline -- Lanes section ---------
+export const updateLanesOrder = async (lanes: Lane[]) => {
+  try {
+    const updateTrans = lanes.map((lane) =>
+      db.lane.update({
+        where: {
+          id: lane.id,
+        },
+        data: {
+          order: lane.order,
+        },
+      })
+    );
+
+    await db.$transaction(updateTrans);
+    console.log("🟢 Done reordered 🟢");
+  } catch (error) {
+    console.log(error, "ERROR UPDATE LANES ORDER");
+  }
+};
+
+export const updateTicketsOrder = async (tickets: Ticket[]) => {
+  try {
+    const updateTrans = tickets.map((ticket) =>
+      db.ticket.update({
+        where: {
+          id: ticket.id,
+        },
+        data: {
+          order: ticket.order,
+          laneId: ticket.laneId,
+        },
+      })
+    );
+
+    await db.$transaction(updateTrans);
+    console.log("🟢 Done reordered 🟢");
+  } catch (error) {
+    console.log(error, "🔴 ERROR UPDATE TICKET ORDER");
+  }
 };

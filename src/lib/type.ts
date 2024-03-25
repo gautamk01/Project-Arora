@@ -81,3 +81,7 @@ export const CreateFunnelFormSchema = z.object({
   subDomainName: z.string().optional(),
   favicon: z.string().optional(),
 });
+
+export type PipelineDetailsWithLanesCardsTagsTickets = Prisma.PromiseReturnType<
+  typeof getPipelineDetails
+>;
