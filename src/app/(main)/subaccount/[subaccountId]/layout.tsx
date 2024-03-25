@@ -77,9 +77,7 @@ const SubaccountLayout = async ({ children, params }: Props) => {
           role={user.privateMetadata.role as Role}
           subAccountId={params.subaccountId as string}
         />
-        <div className="relative">
-          <BlurPage>{children}</BlurPage>
-        </div>
+        <div className="relative">{children}</div>
       </div>
     </div>
   );
