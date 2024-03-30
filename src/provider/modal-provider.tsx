@@ -1,6 +1,6 @@
 "use client";
 import { TicketDetails } from "@/lib/type";
-import { Agency, User } from "@prisma/client";
+import { Agency, Contact, User } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 
 /*************************Type Section **********************/
@@ -12,6 +12,7 @@ interface ModalProviderProps {
 export type ModalData = {
   user?: User;
   agency?: Agency;
+  contact?: Contact;
   ticket?: TicketDetails[0]; //this is maninly created for the pipeline
 };
 type ModalContextType = {

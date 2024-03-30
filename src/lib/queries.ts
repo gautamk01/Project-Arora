@@ -694,7 +694,6 @@ export const updateLanesOrder = async (lanes: Lane[]) => {
     );
 
     await db.$transaction(updateTrans);
-    console.log("🟢 Done reordered 🟢");
   } catch (error) {
     console.log(error, "ERROR UPDATE LANES ORDER");
   }
@@ -715,7 +714,6 @@ export const updateTicketsOrder = async (tickets: Ticket[]) => {
     );
 
     await db.$transaction(updateTrans);
-    console.log("🟢 Done reordered 🟢");
   } catch (error) {
     console.log(error, "🔴 ERROR UPDATE TICKET ORDER");
   }
@@ -874,5 +872,16 @@ export const getTagsForSubaccount = async (subaccountId: string) => {
 
 export const deleteTag = async (tagId: string) => {
   const response = await db.tag.delete({ where: { id: tagId } });
+  return response;
+};
+
+export const upsertContact = async (
+  contact: Prisma.ContactUncheckedCreateInput
+) => {
+  const response = await db.contact.upsert({
+    where: { id: contact.id || v4() },
+    update: contact,
+    create: contact,
+  });
   return response;
 };
