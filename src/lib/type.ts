@@ -125,4 +125,9 @@ export type FunnelsForSubAccount = Prisma.PromiseReturnType<
   typeof getFunnels
 >[0];
 
+export const FunnelPageSchema = z.object({
+  name: z.string().min(1),
+  pathName: z.string().optional(),
+});
+
 export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput;
