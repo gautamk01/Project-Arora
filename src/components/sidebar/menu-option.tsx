@@ -25,7 +25,7 @@ import {
 } from "../ui/command";
 import Link from "next/link";
 import CustomModal from "../global/custom-modal";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import SubAccountDetails from "../form/subaccount-details";
 import { Separator } from "../ui/separator";
 import { icons } from "@/lib/constants";

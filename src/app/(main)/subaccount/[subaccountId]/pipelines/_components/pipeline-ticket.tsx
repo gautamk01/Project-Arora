@@ -37,7 +37,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { deleteTicket, saveActivityLogsNotification } from "@/lib/queries";
 import { TicketWithTags } from "@/lib/type";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { Contact2, Edit, MoreHorizontalIcon, Trash, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";

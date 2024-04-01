@@ -31,7 +31,7 @@ import { useToast } from "../ui/use-toast";
 import { saveActivityLogsNotification, upsertSubAccount } from "@/lib/queries";
 import { useEffect } from "react";
 import Loading from "../global/loading";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 
 const formSchema = z.object({
   name: z.string(),

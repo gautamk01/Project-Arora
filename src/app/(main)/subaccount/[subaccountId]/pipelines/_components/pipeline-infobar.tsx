@@ -15,7 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { Pipeline } from "@prisma/client";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import Link from "next/link";

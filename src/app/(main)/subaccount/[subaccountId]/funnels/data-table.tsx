@@ -1,7 +1,15 @@
 "use client";
-import CustomModal from "@/components/global/custom-modal";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import React from "react";
+
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Plus, Search } from "lucide-react";
+
 import {
   Table,
   TableBody,
@@ -10,19 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import CustomModal from "@/components/global/custom-modal";
 import { useModal } from "@/Provider/modalProvider";
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Search } from "lucide-react";
 
-import React from "react";
-
-interface DataTableProps<TData, TValue> {
+interface FunnelsDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterValue: string;
@@ -30,57 +31,56 @@ interface DataTableProps<TData, TValue> {
   modalChildren?: React.ReactNode;
 }
 
-export default function DataTable<TData, TValue>({
+export default function FunnelsDataTable<TData, TValue>({
   columns,
   data,
   filterValue,
-  actionButtonText,
   modalChildren,
-}: DataTableProps<TData, TValue>) {
-  const { setOpen } = useModal();
+  actionButtonText,
+}: FunnelsDataTableProps<TData, TValue>) {
+  const { isOpen, setOpen, setClose } = useModal();
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
-
   return (
     <>
       <div className="flex items-center justify-between">
         <div className="flex items-center py-4 gap-2">
           <Search />
           <Input
-            placeholder="Search Name..."
+            placeholder="Search funnel name..."
             value={
               (table.getColumn(filterValue)?.getFilterValue() as string) ?? ""
             }
-            onChange={(event) => {
-              table.getColumn(filterValue)?.setFilterValue(event.target.value);
-            }}
+            onChange={(event) =>
+              table.getColumn(filterValue)?.setFilterValue(event.target.value)
+            }
             className="h-12"
           />
         </div>
         <Button
-          className="flex gap-2"
+          className="flex- gap-2"
           onClick={() => {
-            if (modalChildren) {
+            if (modalChildren)
               setOpen(
                 <CustomModal
-                  title="Add a team member"
-                  subheading="Send an invitation"
+                  title="Create A Funnel"
+                  subheading="Funnels are a like websites, but better! Try creating one!"
                 >
                   {modalChildren}
                 </CustomModal>
               );
-            }
           }}
         >
           {actionButtonText}
         </Button>
       </div>
-      <div className="border bg-background rounded-lg">
-        <Table>
+      <div className=" border bg-background rounded-lg">
+        <Table className="">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

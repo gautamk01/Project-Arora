@@ -7,7 +7,7 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { SubAccount, User } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";

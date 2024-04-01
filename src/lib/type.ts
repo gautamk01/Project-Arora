@@ -18,6 +18,7 @@ import {
 } from "./queries";
 import { db } from "./db";
 import { z } from "zod";
+import { getFunnels } from "./queries/funnelqueries";
 
 export type NotificationWithUser =
   | ({
@@ -119,3 +120,9 @@ export const ContactUserFormSchema = z.object({
   name: z.string().min(1, "Required"),
   email: z.string().email(),
 });
+
+export type FunnelsForSubAccount = Prisma.PromiseReturnType<
+  typeof getFunnels
+>[0];
+
+export type UpsertFunnelPage = Prisma.FunnelPageCreateWithoutFunnelInput;

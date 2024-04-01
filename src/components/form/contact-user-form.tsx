@@ -26,7 +26,7 @@ import { ContactUserFormSchema } from "@/lib/type";
 import { saveActivityLogsNotification, upsertContact } from "@/lib/queries";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 
 interface ContactUserFormProps {
   subaccountId: string;

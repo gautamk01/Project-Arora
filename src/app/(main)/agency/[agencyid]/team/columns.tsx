@@ -43,7 +43,7 @@ import { useRouter } from "next/navigation";
 
 import { UsersWithAgencySubAccountPermissionsSidebarOptions } from "@/lib/type";
 import CustomModal from "@/components/global/custom-modal";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import UserDetails from "@/components/form/user-details";
 
 export const columns: ColumnDef<UsersWithAgencySubAccountPermissionsSidebarOptions>[] =

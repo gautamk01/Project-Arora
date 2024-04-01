@@ -7,7 +7,7 @@ import {
   PipelineDetailsWithLanesCardsTagsTickets,
   TicketAndTags,
 } from "@/lib/type";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { Lane, Ticket } from "@prisma/client";
 import { Flag, Plus } from "lucide-react";
 import React, { useEffect, useState } from "react";

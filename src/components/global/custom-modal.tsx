@@ -1,6 +1,6 @@
 "use client";
 
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 

@@ -3,7 +3,7 @@
 import ContactUserForm from "@/components/form/contact-user-form";
 import CustomModal from "@/components/global/custom-modal";
 import { Button } from "@/components/ui/button";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import React from "react";
 
 type Props = {

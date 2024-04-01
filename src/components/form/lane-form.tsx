@@ -32,7 +32,7 @@ import { v4 } from "uuid";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { LaneFormSchema } from "@/lib/type";
 
 interface CreateLaneFormProps {

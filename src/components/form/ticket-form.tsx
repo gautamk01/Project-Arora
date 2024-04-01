@@ -37,7 +37,7 @@ import {
   upsertTicket,
 } from "@/lib/queries";
 import { TicketFormSchema, TicketWithTags } from "@/lib/type";
-import { useModal } from "@/provider/modal-provider";
+import { useModal } from "@/Provider/modalProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Contact, Tag, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
