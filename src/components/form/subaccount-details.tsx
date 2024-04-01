@@ -81,7 +81,7 @@ const SubAccountDetails: React.FC<SubAccountDetailsProps> = ({
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await upsertSubAccount({
         id: details?.id ? details.id : v4(),
@@ -101,27 +101,41 @@ const SubAccountDetails: React.FC<SubAccountDetailsProps> = ({
         goal: 5000,
       });
       if (!response) throw new Error("No response from server");
-      await saveActivityLogsNotification({
-        agencyId: response.agencyId,
-        description: `${userName} | updated sub account | ${response.name}`,
-        subaccountId: response.id,
-      });
 
-      toast({
-        title: "Subaccount details saved",
-        description: "Successfully saved your subaccount details.",
-      });
+      if (!details?.id) {
+        await saveActivityLogsNotification({
+          agencyId: response.agencyId,
+          description: `${userName} | Created a sub account | ${response.name}`,
+          subaccountId: response.id,
+        });
 
-      setClose();
-      router.refresh();
+        toast({
+          title: "Created a Subaccount 🎉 ",
+          description: "Successfully saved your subaccount details.",
+        });
+
+        setClose();
+        router.refresh();
+      } else {
+        await saveActivityLogsNotification({
+          agencyId: details.agencyId,
+          description: `${userName} | updated sub account detailes | ${response.name}`,
+          subaccountId: details.id,
+        });
+        toast({
+          title: "Updated the Subaccount details ",
+          description: "Successfully saved your subaccount details.",
+        });
+      }
     } catch (error) {
+      console.log(error);
       toast({
         variant: "destructive",
         title: "Oppse!",
         description: "Could not save sub account details.",
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (details) {
