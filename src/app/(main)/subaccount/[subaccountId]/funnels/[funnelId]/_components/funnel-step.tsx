@@ -27,6 +27,8 @@ import { FunnelsForSubAccount } from "@/lib/type";
 import { useModal } from "@/Provider/modalProvider";
 import { upsertFunnelPage } from "@/lib/queries/funnelqueries";
 import CreateFunnelPage from "@/components/form/funnel-page";
+import FunnelStepCard from "./funnel-step-card";
+import { useRouter } from "next/navigation";
 
 type Props = {
   funnel: FunnelsForSubAccount;
@@ -36,6 +38,7 @@ type Props = {
 };
 
 const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
+  const router = useRouter();
   //we needed to understand which funnel page is clicked for that we used this
   const [clickedPage, setClickedPage] = useState<FunnelPage | undefined>(
     pages[0]
@@ -124,12 +127,12 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
                           onClick={() => setClickedPage(page)}
                         >
                           {/* Funnel Step Card */}
-                          {/* <FunnelStepCard
+                          <FunnelStepCard
                             funnelPage={page}
                             index={idx}
                             key={page.id}
                             activePage={page.id === clickedPage?.id}
-                          /> */}
+                          />
                         </div>
                       ))}
                     </div>

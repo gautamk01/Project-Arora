@@ -24,7 +24,7 @@ import { Button } from "../ui/button";
 import Loading from "../global/loading";
 import { useToast } from "../ui/use-toast";
 import { FunnelPage } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { CopyPlusIcon, Trash } from "lucide-react";
 import { v4 } from "uuid";
 import {
@@ -171,13 +171,20 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                   disabled={form.formState.isSubmitting}
                   type="button"
                   onClick={async () => {
-                    const response = await deleteFunnelePage(defaultData.id);
+                    const response = await deleteFunnelePage(
+                      defaultData.id,
+                      funnelId,
+                      subaccountId
+                    );
                     await saveActivityLogsNotification({
                       agencyId: undefined,
                       description: `Deleted a funnel page ⭕ | ${response?.name}`,
                       subaccountId: subaccountId,
                     });
-                    router.refresh();
+                    toast({
+                      title: "Success",
+                      description: "Deleted a Funnel page ❌",
+                    });
                   }}
                 >
                   {form.formState.isSubmitting ? <Loading /> : <Trash />}

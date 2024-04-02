@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "../db";
 import { UpsertFunnelPage } from "../type";
+import { redirect } from "next/navigation";
 
 export const getFunnels = async (subacountId: string) => {
   const funnels = await db.funnel.findMany({
@@ -70,9 +71,21 @@ export const upsertFunnelPage = async (
   revalidatePath(`/subaccount/${subaccountId}/funnels/${funnelId}`, "page");
   return response;
 };
+export const DeleteFunnel = async (subaccountId: string, funnelId: string) => {
+  if (!subaccountId || !funnelId) return;
+  const response = await db.funnel.delete({ where: { id: funnelId } });
+  revalidatePath(`/subaccount/${subaccountId}/funnels`, "page");
+  return response;
+};
 
-export const deleteFunnelePage = async (funnelPageId: string) => {
+export const deleteFunnelePage = async (
+  funnelPageId: string,
+  funnelId: string,
+  subaccountId: string
+) => {
   const response = await db.funnelPage.delete({ where: { id: funnelPageId } });
+
+  redirect(`/subaccount/${subaccountId}/funnels/${funnelId}`);
 
   return response;
 };

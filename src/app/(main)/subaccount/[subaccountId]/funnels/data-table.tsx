@@ -46,8 +46,10 @@ export default function FunnelsDataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
+
   return (
     <>
+      {/* *************************************Heading section*************************** */}
       <div className="flex items-center justify-between">
         <div className="flex items-center py-4 gap-2">
           <Search />
@@ -62,6 +64,7 @@ export default function FunnelsDataTable<TData, TValue>({
             className="h-12"
           />
         </div>
+        {/* Create Website section */}
         <Button
           className="flex- gap-2"
           onClick={() => {
@@ -71,6 +74,7 @@ export default function FunnelsDataTable<TData, TValue>({
                   title="Create A Funnel"
                   subheading="Funnels are a like websites, but better! Try creating one!"
                 >
+                  {/* Create website form */}
                   {modalChildren}
                 </CustomModal>
               );
@@ -79,6 +83,7 @@ export default function FunnelsDataTable<TData, TValue>({
           {actionButtonText}
         </Button>
       </div>
+      {/* *************************************Table section*************************** */}
       <div className=" border bg-background rounded-lg">
         <Table className="">
           <TableHeader>
@@ -86,7 +91,10 @@ export default function FunnelsDataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      className=" dark:bg-slate-800 dark:text-white bg-gray-300 text-black"
+                      key={header.id}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -106,14 +114,16 @@ export default function FunnelsDataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))
             ) : (
