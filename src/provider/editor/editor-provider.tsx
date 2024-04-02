@@ -28,3 +28,29 @@ export type EditorState = {
   editor: Editor;
   history: HistoryState;
 };
+
+//Working on Reducer , setup the inital state for the Editor
+const initialEditorState: EditorState["editor"] = {
+  //recursive elements
+  elements: [
+    {
+      content: [],
+      id: "__body",
+      name: "Body",
+      style: {},
+      type: "__body",
+    },
+  ],
+  //static elements
+  selectedElement: {
+    id: "",
+    content: [],
+    name: "",
+    style: {},
+    type: null,
+  },
+  device: "Desktop",
+  previewMode: false,
+  liveMode: false,
+  funnelPageId: "",
+};
