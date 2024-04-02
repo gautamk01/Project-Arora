@@ -54,3 +54,13 @@ const initialEditorState: EditorState["editor"] = {
   liveMode: false,
   funnelPageId: "",
 };
+
+const initalHistoryState: EditorState["history"] = {
+  history: [initialEditorState],
+  currentIndex: 0,
+};
+
+const initalState: EditorState = {
+  editor: initialEditorState,
+  history: initalHistoryState,
+};
