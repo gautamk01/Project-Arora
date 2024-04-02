@@ -64,3 +64,9 @@ const initalState: EditorState = {
   editor: initialEditorState,
   history: initalHistoryState,
 };
+
+//Creating the Reducer
+const editorReducer = (
+  state: EditorState = initalState,
+  action: EditorAction
+) => {};
