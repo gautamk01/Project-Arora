@@ -28,6 +28,7 @@ import React, { FocusEventHandler, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { saveActivityLogsNotification } from "@/lib/queries";
 
 type Props = {
   funnelId: string;
@@ -50,6 +51,7 @@ const FunnelEditorNavigation = ({
     });
   }, [funnelPageDetails]);
 
+  //Handler for changing the title
   const handleOnBlurTitleChange: FocusEventHandler<HTMLInputElement> = async (
     event
   ) => {
@@ -72,17 +74,46 @@ const FunnelEditorNavigation = ({
     }
   };
 
+  //Handler for changing the Preview mode
   const handlePreviewClick = () => {
     dispatch({ type: "TOGGLE_PREVIEW_MODE" });
     dispatch({ type: "TOGGLE_LIVE_MODE" });
   };
 
+  //Handler for undo the changes in the webpage
   const handleUndo = () => {
     dispatch({ type: "UNDO" });
   };
+
+  //Handler for Redo the changes in the webpage
   const handleRedo = () => {
     dispatch({ type: "REDO" });
   };
+
+  //Handler for onsave
+  const handleOnSave = async () => {
+    const content = JSON.stringify(state.editor.elements);
+    console.log(content);
+    try {
+      const response = await upsertFunnelPage(
+        subaccountId,
+        {
+          ...funnelPageDetails,
+          content,
+        },
+        funnelId
+      );
+      await saveActivityLogsNotification({
+        agencyId: undefined,
+        description: `updated the webpage | ${response?.name}`,
+        subaccountId: subaccountId,
+      });
+      toast.success("Successfully Saved the webpage");
+    } catch (error) {
+      toast.error("There is an error found in saveing the webpage");
+    }
+  };
+
   return (
     <TooltipProvider>
       <nav
@@ -202,7 +233,7 @@ const FunnelEditorNavigation = ({
               Last updated {funnelPageDetails.updatedAt.toLocaleDateString()}
             </span>
           </div>
-          {/* <Button onClick={handleOnSave}>Save</Button> */}
+          <Button onClick={handleOnSave}>Save</Button>
         </aside>
       </nav>
     </TooltipProvider>
