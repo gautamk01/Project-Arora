@@ -642,24 +642,6 @@ export const getLanesWithTicketAndTags = async (pipelineId: string) => {
   return response;
 };
 
-export const upsertFunnel = async (
-  subaccountId: string,
-  funnel: z.infer<typeof CreateFunnelFormSchema> & { liveProducts: string },
-  funnelId: string
-) => {
-  const response = await db.funnel.upsert({
-    where: { id: funnelId },
-    update: funnel,
-    create: {
-      ...funnel,
-      id: funnelId || v4(),
-      subAccountId: subaccountId,
-    },
-  });
-
-  return response;
-};
-
 export const upsertPipeline = async (
   pipeline: Prisma.PipelineUncheckedCreateWithoutLaneInput
 ) => {

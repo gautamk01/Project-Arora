@@ -2,8 +2,28 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "../db";
-import { UpsertFunnelPage } from "../type";
+import { CreateFunnelFormSchema, UpsertFunnelPage } from "../type";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+import { v4 } from "uuid";
+
+export const upsertFunnel = async (
+  subaccountId: string,
+  funnel: z.infer<typeof CreateFunnelFormSchema> & { liveProducts: string },
+  funnelId: string
+) => {
+  const response = await db.funnel.upsert({
+    where: { id: funnelId },
+    update: funnel,
+    create: {
+      ...funnel,
+      id: funnelId || v4(),
+      subAccountId: subaccountId,
+    },
+  });
+
+  return response;
+};
 
 export const getFunnels = async (subacountId: string) => {
   const funnels = await db.funnel.findMany({

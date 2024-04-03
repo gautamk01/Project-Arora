@@ -19,7 +19,7 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import Loading from "../global/loading";
 import { CreateFunnelFormSchema } from "@/lib/type";
-import { saveActivityLogsNotification, upsertFunnel } from "@/lib/queries";
+import { saveActivityLogsNotification } from "@/lib/queries";
 import { v4 } from "uuid";
 import { toast } from "../ui/use-toast";
 import { useModal } from "@/Provider/modalProvider";
@@ -37,7 +37,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { DeleteFunnel } from "@/lib/queries/funnelqueries";
+import { DeleteFunnel, upsertFunnel } from "@/lib/queries/funnelqueries";
 
 interface CreateFunnelProps {
   defaultData?: Funnel;
