@@ -1,4 +1,4 @@
-import { DeviceType, EditorElement } from "./editor-provider";
+import { DeviceType, EditorElement } from "./editor-reducer";
 
 export type EditorAction =
   | {

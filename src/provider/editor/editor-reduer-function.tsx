@@ -1,5 +1,5 @@
 import { EditorAction } from "./editor-action";
-import { EditorElement } from "./editor-provider";
+import { EditorElement } from "./editor-reducer";
 
 //THis is a recursive function
 //using this function we can add any item inside the conatiner
