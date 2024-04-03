@@ -1,33 +1,38 @@
 import { EditorBtns } from "@/lib/constants";
 import { EditorAction } from "./editor-action";
-import { addAnElement } from "./editor-reduer-function";
+import {
+  addAnElement,
+  deleteAnElement,
+  updateAnElement,
+} from "./editor-reduer-function";
 
 export type DeviceType = "Desktop" | "Mobile" | "Tablet";
 
+// example :- Container inside a Container can be an editor element
 export type EditorElement = {
   id: string;
   style: React.CSSProperties;
   name: string;
   type: EditorBtns;
-  content: EditorElement[] | {}; //we have 2 content one is static another is recursive
+  content: EditorElement[] | {}; //we have 2 content one is static "{}", another is recursive EditorELement[]
 };
 
 export type Editor = {
-  liveMode: boolean;
+  liveMode: boolean; //Live or not live
   elements: EditorElement[]; //all the Editor Element
-  selectedElement: EditorElement; //editor element
-  device: DeviceType;
-  previewMode: boolean;
-  funnelPageId: string;
+  selectedElement: EditorElement; //selected element from the EditorElements to edit
+  device: DeviceType; //Type of Device
+  previewMode: boolean; //Preview the website
+  funnelPageId: string; //Funnelpageid
 };
 
 export type HistoryState = {
-  history: Editor[]; //stack
-  currentIndex: number;
+  history: Editor[]; //it is a collection of editor
+  currentIndex: number; // currentIndex is the position number to track the change
 };
 
 export type EditorState = {
-  editor: Editor;
+  editor: Editor; //
   history: HistoryState;
 };
 
@@ -106,8 +111,66 @@ const editorReducer = (
       return newEditorState;
 
     case "UPDATE_ELEMENT":
+      //perform logic to update the element in the state
+      const updatedElements = updateAnElement(state.editor.elements, action);
+      const UpdatedElementIsSelected =
+        state.editor.selectedElement.id === action.payload.elementDetails.id;
+      //if that element is selected  then show that element is updated
+      const updateEditorStateWithUpdate = {
+        ...state.editor,
+        elements: updatedElements,
+        selectedElement: UpdatedElementIsSelected
+          ? action.payload.elementDetails
+          : {
+              id: "",
+              content: [],
+              name: "",
+              style: {},
+              type: null,
+            },
+      };
+
+      const updateHistoryWithUpdate = [
+        ...state.history.history.slice(0, state.history.currentIndex + 1),
+        { ...updateEditorStateWithUpdate }, //Save a copy of the updated state
+      ];
+
+      const updatedEditor = {
+        ...state,
+        editor: updateEditorStateWithUpdate,
+        history: {
+          ...state.history,
+          history: updateHistoryWithUpdate,
+          currentIndex: updateHistoryWithUpdate.length - 1,
+        },
+      };
+      return updatedEditor;
 
     case "DELETE_ELEMENT":
+      const updatedElementsAfterDelete = deleteAnElement(
+        state.editor.elements,
+        action
+      );
+      const updatedEditorStateAfterDelete = {
+        ...state.editor,
+        elements: updatedElementsAfterDelete,
+      };
+      const updateHistoryAfterDelete = [
+        ...state.history.history.slice(0, state.history.currentIndex + 1),
+        { ...updatedEditorStateAfterDelete },
+      ];
+
+      const deletedState = {
+        ...state,
+        editor: updatedEditorStateAfterDelete,
+        history: {
+          ...state.history,
+          history: updateHistoryAfterDelete,
+          currentIndex: updateHistoryAfterDelete.length - 1,
+        },
+      };
+
+      return deletedState;
     case "CHANGE_CLICKED_ELEMENT":
     case "CHANGE_DEVICE":
     case "TOGGLE_PREVIEW_MODE":
