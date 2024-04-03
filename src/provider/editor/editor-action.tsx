@@ -48,7 +48,7 @@ export type EditorAction =
   | {
       type: "LOAD_DATA";
       payload: {
-        elements: EditorElement;
+        elements: EditorElement[];
         withLive: boolean;
       };
     }

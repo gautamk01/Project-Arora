@@ -5,6 +5,8 @@ import {
   deleteAnElement,
   updateAnElement,
 } from "./editor-reduer-function";
+import { createContext, Dispatch } from "react";
+import { FunnelPage } from "@prisma/client";
 
 export type DeviceType = "Desktop" | "Mobile" | "Tablet";
 
@@ -172,13 +174,132 @@ const editorReducer = (
 
       return deletedState;
     case "CHANGE_CLICKED_ELEMENT":
+      const clickedState: EditorState = {
+        ...state,
+        editor: {
+          ...state.editor,
+          //here the selected element will be payload
+          selectedElement: action.payload.elementDetails || {
+            id: "",
+            content: [],
+            name: "",
+            style: {},
+            type: null,
+          },
+        },
+
+        history: {
+          ...state.history,
+          history: [
+            ...state.history.history.slice(0, state.history.currentIndex + 1),
+            { ...state.editor }, //save a copy of the current editor state
+          ],
+          currentIndex: state.history.currentIndex + 1,
+        },
+      };
+      return clickedState;
+
     case "CHANGE_DEVICE":
+      const changedDeviceState: EditorState = {
+        ...state,
+        editor: {
+          ...state.editor,
+          device: action.payload.device,
+        },
+      };
+      return changedDeviceState;
+
     case "TOGGLE_PREVIEW_MODE":
+      const toggleState: EditorState = {
+        ...state,
+        editor: {
+          ...state.editor,
+          previewMode: !state.editor.previewMode,
+        },
+      };
+
+      return toggleState;
     case "TOGGLE_LIVE_MODE":
+      const toggleLiveMode: EditorState = {
+        ...state,
+        editor: {
+          ...state.editor,
+          liveMode: action.payload
+            ? action.payload.value
+            : !state.editor.liveMode,
+        },
+      };
+      return toggleLiveMode;
     case "REDO":
+      //if there existe a something ahead we can forword
+      if (state.history.currentIndex < state.history.history.length - 1) {
+        const nextIndex = state.history.currentIndex + 1;
+        const nextEditorState = { ...state.history.history[nextIndex] }; // now we change the history
+
+        //Redostate
+        const redoState: EditorState = {
+          ...state,
+          editor: nextEditorState, // passing the Redo state to the editor
+          history: {
+            ...state.history,
+            currentIndex: nextIndex, //changeing the index to the new position
+          },
+        };
+
+        return redoState;
+      }
+      return state;
     case "UNDO":
+      //there is something to undo
+      if (state.history.currentIndex > 0) {
+        const previouseIndex = state.history.currentIndex - 1;
+        const previouseEdiotor = { ...state.history.history[previouseIndex] };
+
+        //undo State
+        const undoState: EditorState = {
+          ...state,
+          editor: previouseEdiotor,
+          history: {
+            ...state.history,
+            currentIndex: previouseIndex,
+          },
+        };
+        return undoState;
+      }
+      return state;
     case "LOAD_DATA":
+      // we are going to load some new data when are trying to access a domain or a page
+      return {
+        ...initalState, //everything in inital state
+        editor: {
+          ...initalState.editor,
+          elements: action.payload.elements || initialEditorState.elements, //elements from the dispatch
+          liveMode: !!action.payload.withLive, // live mode from dispatch
+          // when we have to pass live mode when it is in production
+        },
+      };
     case "SET_FUNNELPAGE_ID":
+      const { funnelPageId } = action.payload;
+      const updatedEditorStatewithFunnelpageId = {
+        ...state.editor,
+        funnelPageId,
+      };
+      const updatedHistoryWithFunnelPageId = [
+        ...state.history.history.slice(0, state.history.currentIndex + 1),
+        { ...updatedEditorStatewithFunnelpageId },
+      ];
+
+      const funnelPageIdState: EditorState = {
+        ...state,
+        editor: updatedEditorStatewithFunnelpageId,
+        history: {
+          ...state.history,
+          history: updatedHistoryWithFunnelPageId,
+          currentIndex: updatedHistoryWithFunnelPageId.length - 1,
+        },
+      };
+
+      return funnelPageIdState;
     default:
       return state;
   }
