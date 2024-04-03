@@ -3,7 +3,7 @@
 import { useEditor } from "@/Provider/editor/editor-provider";
 import { FunnelPage } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 type Props = {
   funnelId: string;
@@ -18,6 +18,14 @@ const FunnelEditorNavigation = ({
 }: Props) => {
   const router = useRouter();
   const { state, dispatch } = useEditor();
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_FUNNELPAGE_ID",
+      payload: { funnelPageId: funnelPageDetails.id },
+    });
+  });
+
   return <div>FunnelEditorNavigation</div>;
 };
 

@@ -1,28 +1,19 @@
+"use client";
 import { EditorAction } from "./editor-action";
 import { createContext, Dispatch, useContext, useReducer } from "react";
 import { FunnelPage } from "@prisma/client";
-import {
-  DeviceType,
-  editorReducer,
-  EditorState,
-  initalState,
-} from "./editor-reducer";
+import { editorReducer, EditorState, initalState } from "./editor-reducer";
 
-export type EditorContextData = {
-  device: DeviceType;
-  previewMode: boolean;
-  setPreviewMode: (previewMode: boolean) => void;
-  setDevice: (device: DeviceType) => void;
-};
-
+//This is mainly for the create Context type
 export type EditorContextType = {
-  state: EditorState;
-  dispatch: Dispatch<EditorAction>;
+  state: EditorState; //calling the state with  type EditorState
+  dispatch: Dispatch<EditorAction>; // Now Dispatch to activate the Reducer function type EditorAction
   subaccountId: string;
   funnelId: string;
   pageDetails: FunnelPage | null;
 };
 
+//This is the initalEditorContext value for Create Context
 const initialEditorContext: EditorContextType = {
   state: initalState,
   dispatch: () => undefined,
@@ -31,9 +22,12 @@ const initialEditorContext: EditorContextType = {
   pageDetails: null,
 };
 
+//initialisation of Context
 export const EditorContext =
   createContext<EditorContextType>(initialEditorContext);
 
+/************PROVIDER FOR CONTEXT************/
+//types for the Provider
 type EditorProps = {
   children: React.ReactNode;
   subaccountId: string;
@@ -41,12 +35,15 @@ type EditorProps = {
   pageDetails: FunnelPage;
 };
 
+//Creating a provider function so that we can use the values for the children inside the provider
+
 const EditorProvider = ({
   children,
   subaccountId,
   funnelId,
   pageDetails,
 }: EditorProps) => {
+  //calling the useReducer function
   const [state, dispatch] = useReducer(editorReducer, initalState);
   return (
     <EditorContext.Provider
@@ -57,6 +54,7 @@ const EditorProvider = ({
   );
 };
 
+// manily to access the value by the provider
 export const useEditor = () => {
   const context = useContext(EditorContext);
   if (!context) {
