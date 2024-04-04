@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { saveActivityLogsNotification } from "@/lib/queries";
+import Tooltipwrapper from "./tooltip";
 
 type Props = {
   funnelId: string;
@@ -151,20 +152,15 @@ const FunnelEditorNavigation = ({
             }}
           >
             <TabsList className="grid w-full grid-cols-3 bg-transparent h-fit">
-              <Tooltip>
-                <TooltipTrigger>
-                  <TabsTrigger
-                    value="Desktop"
-                    className="data-[state=active]:bg-muted w-10 h-10 p-0"
-                  >
-                    <Laptop />
-                  </TabsTrigger>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Desktop</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
+              <Tooltipwrapper info="Laptop">
+                <TabsTrigger
+                  value="Desktop"
+                  className="data-[state=active]:bg-muted w-10 h-10 p-0"
+                >
+                  <Laptop />
+                </TabsTrigger>
+              </Tooltipwrapper>
+              <Tooltipwrapper info="Tablet">
                 <TooltipTrigger>
                   <TabsTrigger
                     value="Tablet"
@@ -173,11 +169,8 @@ const FunnelEditorNavigation = ({
                     <Tablet />
                   </TabsTrigger>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Tablet</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
+              </Tooltipwrapper>
+              <Tooltipwrapper info="Mobile">
                 <TooltipTrigger>
                   <TabsTrigger
                     value="Mobile"
@@ -186,10 +179,7 @@ const FunnelEditorNavigation = ({
                     <Smartphone />
                   </TabsTrigger>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>Mobile</p>
-                </TooltipContent>
-              </Tooltip>
+              </Tooltipwrapper>
             </TabsList>
           </Tabs>
         </aside>

@@ -7,6 +7,42 @@
   src: url(../fonts/Gilroy-Regular.ttf);
 }
 
+/* Scrollbar container */
+::-webkit-scrollbar {
+  width: 8px; /* Adjust the width of the scrollbar */
+  height: 8px; /* Needed for horizontal scroll */
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); /* Subtle background color */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Scrollbar color */
+  border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+  border: 2px solid transparent; /* Creates padding from the track */
+  background-clip: content-box; /* Ensures the background only covers the content area */
+}
+
+/* Scrollbar handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(
+    0,
+    0,
+    0,
+    0.3
+  ); /* Darker color on hover for better visibility */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin; /* Makes scrollbar thin */
+  scrollbar-color: rgba(161, 161, 161, 0.2) rgba(0, 0, 0, 0.1); /* Thumb and track color */
+}
+
 *,
 *::before,
 *::after {

@@ -16,7 +16,7 @@ export type EditorElement = {
   style: React.CSSProperties;
   name: string;
   type: EditorBtns;
-  content: EditorElement[] | {}; //we have 2 content one is static "{}", another is recursive EditorELement[]
+  content: EditorElement[] | { href?: string }; //we have 2 content one is static "{}", another is recursive EditorELement[]
 };
 
 export type Editor = {
