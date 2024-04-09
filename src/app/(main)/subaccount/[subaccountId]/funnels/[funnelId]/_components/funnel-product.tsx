@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,11 +17,17 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { saveActivityLogsNotification } from "@/lib/queries";
-import { Funnel } from "@prisma/client";
+import { Funnel, FunnelProduct } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { updateFunnelProducts } from "@/lib/queries/funnelqueries";
+import {
+  getFunnelsProduct,
+  updateFunnelProducts,
+} from "@/lib/queries/funnelqueries";
+import { useModal } from "@/Provider/modalProvider";
+import CustomModal from "@/components/global/custom-modal";
+import FunnelProductDetails from "@/components/form/funnel-product-detail";
 
 interface FunnelProductsTableProps {
   defaultData: Funnel;
@@ -31,6 +37,27 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
   defaultData,
 }) => {
   const router = useRouter();
+  const { setOpen, setClose } = useModal();
+  const [product, setProduct] = useState<FunnelProduct[]>([]);
+  useEffect(() => {
+    const fetchingProduct = async () => {
+      const getproduct = await getFunnelsProduct(defaultData.id);
+      setProduct(getproduct);
+    };
+    fetchingProduct();
+    // Event listener for the custom 'productAdded' event
+    const handleProductAdded = () => {
+      fetchingProduct(); // Re-fetch products on event
+    };
+
+    window.addEventListener("productAdded", handleProductAdded);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("productAdded", handleProductAdded);
+    };
+  }, [defaultData.id]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [liveProducts, setLiveProducts] = useState<
     { productId: string; recurring: boolean }[] | []
@@ -51,10 +78,26 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
     router.refresh();
   };
 
-  const handleAddProduct = async () => {};
+  const HandleAddProduct = () => {
+    setOpen(
+      <CustomModal title="Add a Product" subheading="You can switch bettween">
+        <FunnelProductDetails funnelDetails={defaultData} />
+      </CustomModal>
+    );
+  };
   return (
     <>
-      <Card className="flex-1 flex-shrink">
+      <Card className="flex-1 flex-shrink relative">
+        <div className=" absolute top-0 right-4 max-sm:hidden  ">
+          <Button
+            disabled={isLoading}
+            onClick={HandleAddProduct}
+            className="mt-4"
+          >
+            + Add Products
+          </Button>
+        </div>
+
         <CardHeader>
           <CardTitle>Funnel Products</CardTitle>
           <CardDescription>
@@ -76,45 +119,36 @@ const FunnelProductsTable: React.FC<FunnelProductsTableProps> = ({
               </TableHeader>
               <TableBody className="font-medium truncate">
                 {/* Needed to work on the product section  */}
-                {/* {products.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell>
-                <Input
-                  defaultChecked={
-                    !!liveProducts.find(
-                      //@ts-ignore
-                      (prod) => prod.productId === product.default_price.id
-                    )
-                  }
-                  onChange={() => handleAddProduct(product)}
-                  type="checkbox"
-                  className="w-4 h-4"
-                />
-              </TableCell>
-              <TableCell>
-                <Image
-                  alt="product Image"
-                  height={60}
-                  width={60}
-                  src={product.images[0]}
-                />
-              </TableCell>
-              <TableCell>{product.name}</TableCell>
-              <TableCell>
-                {
-                  //@ts-ignore
-                  product.default_price?.recurring ? "Recurring" : "One Time"
-                }
-              </TableCell>
-              <TableCell className="text-right">
-                $
-                {
-                  //@ts-ignore
-                  product.default_price?.unit_amount / 100
-                }
-              </TableCell>
-            </TableRow>
-          ))} */}
+                {product.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      <Input
+                        defaultChecked={product.live}
+                        // onChange={() => handleAddProduct(product)}
+                        type="checkbox"
+                        className="w-4 h-4"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Image
+                        alt="product Image"
+                        height={60}
+                        width={60}
+                        src={product.Image}
+                      />
+                    </TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>
+                      {
+                        //@ts-ignore
+                        product.Intervel
+                      }
+                    </TableCell>
+                    <TableCell className="text-right">
+                      ₹{product.price}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
             <Button

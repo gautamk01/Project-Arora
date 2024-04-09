@@ -60,6 +60,9 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
     },
   });
 
+  const forceReload = () => {
+    window.location.href = window.location.href; // Or window.location.reload(true);
+  };
   useEffect(() => {
     if (defaultData) {
       form.reset({ name: defaultData.name, pathName: defaultData.pathName });
@@ -221,7 +224,8 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                       title: "Success",
                       description: "Copied and Save Funnel Page Details",
                     });
-                    router.refresh();
+                    window.dispatchEvent(new CustomEvent("Stepadded"));
+                    forceReload();
                   }}
                 >
                   {form.formState.isSubmitting ? <Loading /> : <CopyPlusIcon />}

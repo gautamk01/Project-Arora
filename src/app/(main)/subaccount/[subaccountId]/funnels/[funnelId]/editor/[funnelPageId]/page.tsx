@@ -4,6 +4,7 @@ import React from "react";
 import FunnelEditorNavigation from "./_components/funnel-editor-navigation";
 import EditorProvider from "@/Provider/editor/editor-provider";
 import FunnelEditorSidebar from "./_components/funnel-editor-sidebar";
+import FunnelEditor from "./_components/funnel-editor";
 
 type Props = {
   params: {
@@ -36,6 +37,10 @@ const Page = async ({ params }: Props) => {
           subaccountId={params.subaccountId}
           funnelPageDetails={funnelPageDetails}
         />
+        <div className=" h-full flex justify-center">
+          {/* workspace for the website Builder */}
+          <FunnelEditor funnelPageId={params.funnelPageId} />
+        </div>
         <FunnelEditorSidebar subaccountId={params.subaccountId} />
       </EditorProvider>
     </div>

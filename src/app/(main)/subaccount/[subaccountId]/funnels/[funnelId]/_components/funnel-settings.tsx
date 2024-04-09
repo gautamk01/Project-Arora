@@ -11,21 +11,10 @@ interface FunnelSettingsProps {
   defaultData: Funnel;
 }
 
-const FunnelSettings: React.FC<FunnelSettingsProps> = async ({
+const FunnelSettings: React.FC<FunnelSettingsProps> = ({
   subaccountId,
   defaultData,
 }) => {
-  const subaccountDetails = await db.subAccount.findUnique({
-    where: {
-      id: subaccountId,
-    },
-  });
-
-  if (!subaccountDetails) return;
-  //   const products = await getConnectAccountProducts(
-  //     subaccountDetails.connectAccountId
-  //   )
-
   return (
     <div className="flex gap-4 flex-col xl:!flex-row">
       <FunnelForm subAccountId={subaccountId} defaultData={defaultData} />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const Send = () => {
   return (
@@ -9,7 +9,7 @@ const Send = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_63_10787)">
+      <g clipPath="url(#clip0_63_10787)">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -23,11 +23,7 @@ const Send = () => {
       </g>
       <defs>
         <clipPath id="clip0_63_10787">
-          <rect
-            width="24"
-            height="24"
-            fill="white"
-          />
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>

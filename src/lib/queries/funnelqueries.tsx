@@ -6,6 +6,7 @@ import { CreateFunnelFormSchema, UpsertFunnelPage } from "../type";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { v4 } from "uuid";
+import { FunnelProduct } from "@prisma/client";
 
 export const upsertFunnel = async (
   subaccountId: string,
@@ -25,6 +26,27 @@ export const upsertFunnel = async (
   return response;
 };
 
+export const upsertFunnelProduct = async (FunnelProduct: FunnelProduct) => {
+  try {
+    const response = await db.funnelProduct.upsert({
+      where: { id: FunnelProduct.id },
+      update: FunnelProduct,
+      create: {
+        ...FunnelProduct,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFunnelsProduct = async (funnelId: string) => {
+  const funnels = await db.funnelProduct.findMany({
+    where: { funnelId: funnelId },
+  });
+
+  return funnels;
+};
 export const getFunnels = async (subacountId: string) => {
   const funnels = await db.funnel.findMany({
     where: { subAccountId: subacountId },
@@ -44,6 +66,13 @@ export const getFunnel = async (funnelId: string) => {
         },
       },
     },
+  });
+
+  return funnel;
+};
+export const getFunnelPages = async (funnelId: string) => {
+  const funnel = await db.funnelPage.findMany({
+    where: { id: funnelId },
   });
 
   return funnel;
@@ -80,7 +109,7 @@ export const upsertFunnelPage = async (
               content: [],
               id: "__body",
               name: "Body",
-              styles: { backgroundColor: "white" },
+              style: { backgroundColor: "white" },
               type: "__body",
             },
           ]),
@@ -107,5 +136,24 @@ export const deleteFunnelePage = async (
 
   redirect(`/subaccount/${subaccountId}/funnels/${funnelId}`);
 
+  return response;
+};
+
+export const getFunnelPageDetails = async (funnelPageId: string) => {
+  const response = await db.funnelPage.findUnique({
+    where: {
+      id: funnelPageId,
+    },
+  });
+  return response;
+};
+
+export const getDomainContent = async (subDomainName: string) => {
+  const response = await db.funnel.findUnique({
+    where: {
+      subDomainName,
+    },
+    include: { FunnelPages: true },
+  });
   return response;
 };

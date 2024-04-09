@@ -13,6 +13,8 @@ import clsx from "clsx";
 import React from "react";
 import TabList from "./tabs";
 import SettingTabs from "./tabs/settins-tab";
+import MediaTab from "./tabs/media-tab";
+import ComponentsTab from "./tabs/components-tab";
 
 type Props = {
   subaccountId: string;
@@ -54,6 +56,18 @@ const FunnelEditorSidebar = ({ subaccountId }: Props) => {
                 </SheetDescription>
               </SheetHeader>
               <SettingTabs />
+            </TabsContent>
+            <TabsContent value="Media">
+              <MediaTab subaccountId={subaccountId} />
+            </TabsContent>
+            <TabsContent value="Components">
+              <SheetHeader className=" text-left p-6">
+                <SheetTitle>Components </SheetTitle>
+                <SheetDescription>
+                  You can drag and drop components on you website-workspace
+                </SheetDescription>
+              </SheetHeader>
+              <ComponentsTab />
             </TabsContent>
           </div>
         </SheetContent>

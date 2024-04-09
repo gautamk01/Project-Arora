@@ -219,3 +219,11 @@ export type EditorBtns =
   | "image"
   | null
   | "3Col";
+
+export const defaultStyle: React.CSSProperties = {
+  backgroundPosition: "center",
+  objectFit: "cover",
+  backgroundRepeat: "no-repeat",
+  textAlign: "left",
+  opacity: "100%",
+};

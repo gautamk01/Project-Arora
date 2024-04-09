@@ -23,6 +23,7 @@ import { createMedia, saveActivityLogsNotification } from "@/lib/queries";
 import { Input } from "../ui/input";
 import FileUpload from "../global/file-upload";
 import { Button } from "../ui/button";
+import { useModal } from "@/Provider/modalProvider";
 
 type Props = {
   subaccountId: string;
@@ -34,6 +35,7 @@ const formSchema = z.object({
 });
 
 const UploadMediaForm = ({ subaccountId }: Props) => {
+  const { setClose } = useModal();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -56,6 +58,7 @@ const UploadMediaForm = ({ subaccountId }: Props) => {
       });
       toast({ title: "success ", description: "Uploaded the Media file " });
       router.refresh();
+      setClose();
     } catch (error) {
       console.log(error);
       toast({
