@@ -78,7 +78,7 @@ const FunnelProductDetails = ({ funnelDetails }: Props) => {
         description: "Successfully saved your subaccount details.",
       });
       setClose();
-
+      window.dispatchEvent(new CustomEvent("productAdded"));
       router.refresh();
     } catch (error) {
       console.log(error);

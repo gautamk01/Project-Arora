@@ -6,14 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "@/components/ui/use-toast";
 import { FunnelPage } from "@prisma/client";
 import { Check, ExternalLink, LucideEdit } from "lucide-react";
-import React, { useState } from "react";
-
-import {
-  DragDropContext,
-  DragStart,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import FunnelPagePlaceholder from "@/components/icons/funnel-page-placeholder";
 
@@ -29,6 +22,7 @@ import { upsertFunnelPage } from "@/lib/queries/funnelqueries";
 import CreateFunnelPage from "@/components/form/funnel-page";
 import FunnelStepCard from "./funnel-step-card";
 import { useRouter } from "next/navigation";
+import Pusher from "pusher-js";
 
 type Props = {
   funnel: FunnelsForSubAccount;
@@ -38,68 +32,20 @@ type Props = {
 };
 
 const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
-  const router = useRouter();
   //we needed to understand which funnel page is clicked for that we used this
   const [clickedPage, setClickedPage] = useState<FunnelPage | undefined>(
     pages[0]
   );
+  const router = useRouter();
   const { setOpen } = useModal();
   const [pagesState, setPagesState] = useState(pages); //page state to store on the pages
-  const onDragStart = (event: DragStart) => {
-    //current chosen page
-    const { draggableId } = event;
-    const value = pagesState.find((page) => page.id === draggableId);
-  };
-
-  const onDragEnd = (dropResult: DropResult) => {
-    const { destination, source } = dropResult;
-
-    //no destination or same position
-    if (
-      !destination ||
-      (destination.droppableId === source.droppableId &&
-        destination.index === source.index)
-    ) {
-      return;
-    }
-    //if not we are going to change state
-    const newPageOrder = [...pagesState]
-      .toSpliced(source.index, 1)
-      .toSpliced(destination.index, 0, pagesState[source.index])
-      .map((page, idx) => {
-        return { ...page, order: idx };
-      });
-
-    setPagesState(newPageOrder);
-    newPageOrder.forEach(async (page, index) => {
-      //an api call to change it in the data base
-      try {
-        await upsertFunnelPage(
-          subaccountId,
-          {
-            id: page.id,
-            order: index,
-            name: page.name,
-          },
-          funnelId
-        );
-      } catch (error) {
-        console.log(error);
-        toast({
-          variant: "destructive",
-          title: "Failed",
-          description: "Could not save page order",
-        });
-        return;
-      }
-    });
-
-    toast({
-      title: "Success",
-      description: "Saved page order",
-    });
-  };
-
+  useEffect(() => {
+    console.log("Page is changeing");
+    setPagesState(pages);
+  }, [pages]);
+  var pusher = new Pusher("c7391e6605cf46af2da5", {
+    cluster: "ap2",
+  });
   return (
     <AlertDialog>
       <div className="flex border-[1px] lg:!flex-row flex-col ">
@@ -112,33 +58,24 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
             {/* we are getting all the pages 
             for each pages we are returning a droppable */}
             {pagesState.length ? (
-              <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-                <Droppable
-                  droppableId="funnels"
-                  direction="vertical"
-                  key="funnels"
-                >
-                  {(provided) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                      {pagesState.map((page, idx) => (
-                        <div
-                          className="relative"
-                          key={page.id}
-                          onClick={() => setClickedPage(page)}
-                        >
-                          {/* Funnel Step Card */}
-                          <FunnelStepCard
-                            funnelPage={page}
-                            index={idx}
-                            key={page.id}
-                            activePage={page.id === clickedPage?.id}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
+              <div>
+                {pagesState.map((page, idx) => (
+                  <div
+                    className="relative"
+                    key={page.id}
+                    onClick={() => setClickedPage(page)}
+                  >
+                    {/* <p>{page.name}</p>
+                    Funnel Step Card */}
+                    <FunnelStepCard
+                      funnelPage={page}
+                      index={idx}
+                      key={page.id}
+                      activePage={page.id === clickedPage?.id}
+                    />
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="text-center text-muted-foreground py-6">
                 No Pages

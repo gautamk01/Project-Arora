@@ -343,21 +343,35 @@ model Media {
 
 //it is just a Website 
 model Funnel {
-  id            String       @id @default(uuid())
+  id            String          @id @default(uuid())
   name          String
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   description   String?
-  published     Boolean      @default(false)
-  subDomainName String?      @unique
-  favicon       String?      @db.Text
+  published     Boolean         @default(false)
+  subDomainName String?         @unique
+  favicon       String?         @db.Text
   subAccountId  String
-  SubAccount    SubAccount   @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
+  SubAccount    SubAccount      @relation(fields: [subAccountId], references: [id], onDelete: Cascade)
   FunnelPages   FunnelPage[]
-  liveProducts  String?      @default("[]")
+  liveProducts  String?         @default("[]")
+  FunnelProduct FunnelProduct[]
   ClassName     ClassName[]
 
   @@index([subAccountId])
+}
+
+model FunnelProduct {
+  id       String  @id @default(uuid())
+  name     String
+  live     Boolean
+  Image    String
+  Intervel String
+  price    Int
+  funnelId String
+  Funnel   Funnel  @relation(fields: [funnelId], references: [id], onDelete: Cascade)
+
+  @@index([funnelId])
 }
 
 model ClassName {
