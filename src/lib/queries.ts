@@ -423,11 +423,6 @@ export const upsertSubAccount = async (subAccount: SubAccount) => {
             link: `/subaccount/${subAccount.id}/media`,
           },
           {
-            name: "Automations",
-            icon: "chip",
-            link: `/subaccount/${subAccount.id}/automations`,
-          },
-          {
             name: "Pipelines",
             icon: "flag",
             link: `/subaccount/${subAccount.id}/pipelines`,
@@ -866,4 +861,15 @@ export const upsertContact = async (
     create: contact,
   });
   return response;
+};
+
+export const getPipelines = async (subaccountId: string) => {
+  const response = await db.pipeline.findMany({
+    where: { subAccountId: subaccountId },
+    include: {
+      Lane: {
+        include: { Tickets: true },
+      },
+    },
+  });
 };
