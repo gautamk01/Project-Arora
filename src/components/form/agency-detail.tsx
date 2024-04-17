@@ -2,8 +2,18 @@
 import { Agency } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
-import { useRouter } from "next/navigation";
-import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
+import { redirect, useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 import {
   Card,
   CardContent,
@@ -46,7 +56,6 @@ type Props = {
 
 import { FormSchema } from "./Components/zod_form";
 import Formp from "./Components/Formp1";
-import Delete_section from "./Components/deleteForm";
 import { Switch } from "../ui/switch";
 import { Input } from "../ui/input";
 // Here using zod we are just assigning the validation to the form
@@ -145,6 +154,7 @@ const AgencyDetails = ({ data }: Props) => {
         toast({
           title: "Created Agency",
         });
+        router.refresh();
       }
     } catch (error) {
       toast({
@@ -411,10 +421,27 @@ const AgencyDetails = ({ data }: Props) => {
               </AlertDialogTrigger>
             </div>
           )}
-          <Delete_section
-            deletingAgency={deleteAgency}
-            handleDeleteAgency={handleDeleteAgency}
-          />
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-left">
+                Are you absolutely sure?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-left">
+                This action cannot be undone. This will permanently delete the
+                Agency account and all related sub accounts.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex items-center">
+              <AlertDialogCancel className="mb-2">Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={deletingAgency}
+                className="bg-destructive hover:bg-destructive"
+                onClick={handleDeleteAgency}
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
         </CardContent>
       </Card>
     </AlertDialog>

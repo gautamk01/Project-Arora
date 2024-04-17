@@ -19,6 +19,9 @@ import {
   CreatePipelineFormSchema,
 } from "./type";
 import { z } from "zod";
+import { sendMail } from "./mail";
+import LinearLoginCodeEmail from "../../emails";
+import { render } from "@react-email/render";
 
 //then only this will become a server action file
 
@@ -551,13 +554,13 @@ export const sendInvitation = async (
   try {
     //Cleck auth has an actuall as an email secuences
     //sending email  using clerk auth
-    const invitation = await clerkClient.invitations.createInvitation({
-      emailAddress: email,
-      redirectUrl: process.env.NEXT_PUBLIC_URL,
-      publicMetadata: {
-        throughInvitation: true,
-        role,
-      },
+
+    const url = process.env.NEXT_PUBLIC_URL;
+    await sendMail({
+      to: email,
+      name: "Team Arora",
+      subject: "Test Mail",
+      body: render(LinearLoginCodeEmail({ email, user: "asf" })),
     });
   } catch (error) {
     console.log(error);

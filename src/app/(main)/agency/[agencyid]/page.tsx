@@ -55,17 +55,10 @@ const page = async ({ params }: Props) => {
   const checkoutSessions = {
     data: [
       {
-        status: "complete",
+        status: "",
         created: Date.now() - 86400000,
-        amount_total: 20000,
+        amount_total: 0,
       }, // Yesterday, $200.00
-      {
-        status: "complete",
-        created: Date.now() - 172800000,
-        amount_total: 15000,
-      }, // 2 days ago, $150.00
-      { status: "open", created: Date.now() - 259200000, amount_total: 5000 }, // 3 days ago, $50.00
-      // Add more sessions as needed...
     ],
   };
 
@@ -108,7 +101,7 @@ const page = async ({ params }: Props) => {
             <CardHeader>
               <CardDescription>Income</CardDescription>
               <CardTitle className="text-4xl">
-                {net ? `${currency} ${net.toFixed(2)}` : `$0.00`}
+                {net ? `${currency} ${net.toFixed(2)}` : `₹0.00`}
               </CardTitle>
               <small className="text-xs text-muted-foreground">
                 For the year {currentYear}
@@ -125,7 +118,7 @@ const page = async ({ params }: Props) => {
               <CardTitle className="text-4xl">
                 {potentialIncome
                   ? `${currency} ${potentialIncome.toFixed(2)}`
-                  : `$0.00`}
+                  : `₹0.00`}
               </CardTitle>
               <small className="text-xs text-muted-foreground">
                 For the year {currentYear}
