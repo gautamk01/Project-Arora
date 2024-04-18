@@ -20,7 +20,7 @@ import {
 } from "./type";
 import { z } from "zod";
 import { sendMail } from "./mail";
-import LinearLoginCodeEmail from "../../emails";
+import LinearLoginCodeEmail, { AroraInviteUserEmail } from "../../emails";
 import { render } from "@react-email/render";
 
 //then only this will become a server action file
@@ -540,13 +540,16 @@ export const getUser = async (id: string) => {
 export const sendInvitation = async (
   role: Role,
   email: string,
-  agencyId: string
+  name: string,
+  agencyId: string,
+  agencyName: string,
+  agencyImage: string,
+  userName: string
 ) => {
   //this will create a record in the invitation table
   const resposne = await db.invitation.create({
     data: { email, agencyId, role },
   });
-
   //when we store invivtation whenever thay are new to this invitation
   //check if they have an invitaiton
   // our entire saas application only allow one agency per email address
@@ -559,8 +562,17 @@ export const sendInvitation = async (
     await sendMail({
       to: email,
       name: "Team Arora",
-      subject: "Test Mail",
-      body: render(LinearLoginCodeEmail({ email, user: "asf" })),
+      subject: `Invitation Mail Form Agency ${agencyName}`,
+      body: render(
+        AroraInviteUserEmail({
+          username: name,
+          invitedByUsername: userName,
+          teamName: agencyName,
+          teamImage: agencyImage,
+          inviteLink: url,
+          role: role,
+        })
+      ),
     });
   } catch (error) {
     console.log(error);

@@ -116,7 +116,7 @@ const PipelineTicket = ({
     <Draggable draggableId={ticket.id.toString()} index={index}>
       {(provided, snapshot) => {
         if (snapshot.isDragging) {
-          const offset = { x: 300, y: 20 };
+          const offset = { x: 300, y: -50 };
           //@ts-ignore
           const x = provided.draggableProps.style?.left - offset.x;
           //@ts-ignore
@@ -244,6 +244,8 @@ const PipelineTicket = ({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </Card>
+
+                {/* Delete section of Ticket */}
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>

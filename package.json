@@ -44,6 +44,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-email/components": "0.0.16",
     "@react-email/render": "^0.0.12",
+    "@react-email/tailwind": "^0.0.15",
     "@supabase/supabase-js": "^2.41.1",
     "@tanstack/react-table": "^8.13.2",
     "@tremor/react": "^3.14.1",

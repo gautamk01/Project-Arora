@@ -37,6 +37,12 @@ const Teamsection = async ({ params }: Props) => {
     },
   });
 
+  const userDetails = await db.user.findUnique({
+    where: {
+      email: authUser.emailAddresses[0].emailAddress,
+    },
+  });
+  if (!userDetails) return;
   if (!agencyDetails) return;
   return (
     <DataTable
@@ -46,7 +52,14 @@ const Teamsection = async ({ params }: Props) => {
           Add
         </>
       }
-      modalChildren={<SendInvitation agencyId={agencyDetails.id} />}
+      modalChildren={
+        <SendInvitation
+          agencyId={agencyDetails.id}
+          agencyImage={agencyDetails.agencyLogo}
+          agencyName={agencyDetails.name}
+          userName={userDetails.name}
+        />
+      }
       filterValue="name"
       columns={columns}
       data={teamMembers}

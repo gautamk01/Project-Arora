@@ -176,6 +176,8 @@ const PipelineView = ({
             </div>
           )}
         </Droppable>
+
+        {/* If the Pipeline is empty it shows a Flag  */}
         {allLanes.length == 0 && (
           <div className="flex items-center justify-center w-full flex-col">
             <div className="opacity-100">

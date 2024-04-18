@@ -2,6 +2,7 @@ import {
   Body,
   Button,
   Container,
+  Column,
   Head,
   Heading,
   Hr,
@@ -9,115 +10,112 @@ import {
   Img,
   Link,
   Preview,
+  Row,
   Section,
   Text,
 } from "@react-email/components";
+import { Tailwind } from "@react-email/tailwind";
 import * as React from "react";
-
-interface LinearProps {
-  email?: string;
-  user?: string;
+interface VercelInviteUserEmailProps {
+  username?: string;
+  invitedByUsername?: string;
+  teamName?: string;
+  teamImage?: string;
+  inviteLink?: string;
+  role?: string;
 }
-export const LinearLoginCodeEmail = ({ email, user }: LinearProps) => (
-  <Html>
-    <Head />
-    <Preview>Your login code for Linear</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Img
-          src="https://t4.ftcdn.net/jpg/05/50/40/39/360_F_550403931_AUApHi9xSKQV5603KNQRC8mWwwbEJCc0.jpg"
-          width="42"
-          height="42"
-          alt="Linear"
-          style={logo}
-        />
-        <Heading style={heading}>
-          {`${user}, you are Invited to Join Agency`}{" "}
-        </Heading>
-        <Section style={buttonContainer}>
-          <Button style={button} href="https://linear.app">
-            Login to Arora
-          </Button>
-        </Section>
-        <Text style={paragraph}>{email}</Text>
-        <Hr style={hr} />
-        <Link href="http://localhost:3000/" style={reportLink}>
-          ARORA
-        </Link>
-      </Container>
-    </Body>
-  </Html>
-);
 
-export default LinearLoginCodeEmail;
-
-const logo = {
-  borderRadius: 21,
-  width: 42,
-  height: 42,
+export const AroraInviteUserEmail = ({
+  username,
+  invitedByUsername,
+  teamName,
+  teamImage,
+  inviteLink,
+  role,
+}: VercelInviteUserEmailProps) => {
+  return (
+    <Html>
+      <Head />
+      <Tailwind>
+        <Body className="bg-white my-auto mx-auto font-sans px-2">
+          <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
+            <Section className="mt-[32px]">
+              <Img
+                src={teamImage}
+                width="40"
+                height="37"
+                alt="Vercel"
+                className="my-0 mx-auto rounded-full"
+              />
+            </Section>
+            <Text className="text-black text-[24px] font-normal  text-center p-0 my-[30px] mx-0">
+              Join <strong className="capitalize">{username}</strong> on{" "}
+              <strong>{teamName}</strong>
+            </Text>
+            <Text className="text-black text-[14px] leading-[24px]">
+              Hello <span className=" font-bold capitalize">{username}</span>,
+            </Text>
+            <Text className="text-black text-[14px] leading-[24px]">
+              <strong className=" capitalize">{invitedByUsername}</strong> has
+              invited you to Join his agency <strong>{teamName} as </strong>{" "}
+              <strong>{role}</strong>.
+            </Text>
+            <Section>
+              <Row>
+                <Column align="right">
+                  <Img
+                    className="rounded-full"
+                    src={
+                      "https://utfs.io/f/fc1d0da7-d3b3-4206-8318-c22236039afa-yk1nqd.png"
+                    }
+                    width="64"
+                    height="64"
+                  />
+                </Column>
+                <Column align="center">
+                  <Img
+                    src={`https://utfs.io/f/99a50d4e-d2fe-4fc5-963f-fb8acf97c21b-1jf9c9.png`}
+                    width="45"
+                    height="45"
+                    alt="invited you to"
+                  />
+                </Column>
+                <Column align="left">
+                  <Img
+                    className="rounded-full bg-black"
+                    src={teamImage}
+                    width="64"
+                    height="64"
+                  />
+                </Column>
+              </Row>
+            </Section>
+            <Section className="text-center mt-[32px] mb-[32px]">
+              <Button
+                className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
+                href={inviteLink}
+              >
+                Join the team
+              </Button>
+            </Section>
+            <Text className="text-black text-[14px] leading-[24px]">
+              Login on our website using Google
+            </Text>
+            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
 };
 
-const main = {
-  backgroundColor: "#ffffff",
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-};
+AroraInviteUserEmail.PreviewProps = {
+  username: "alanturing",
+  userImage: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUVUH27sngAnS6SnsRdfbuX7XISzFxw-ZVVVgpUWkTBA&s`,
+  invitedByUsername: "Alan",
+  teamName: "Enigma",
+  teamImage: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRa7UsXyOFCYt-DyoB8KyeFgyejTWZnrgkPn4i1kiARQ&s`,
+  inviteLink: "https://vercel.com/teams/invite/foo",
+} as VercelInviteUserEmailProps;
 
-const container = {
-  margin: "0 auto",
-  padding: "20px 0 48px",
-  maxWidth: "560px",
-};
-
-const heading = {
-  fontSize: "24px",
-  letterSpacing: "-0.5px",
-  lineHeight: "1.3",
-  fontWeight: "400",
-  color: "#484848",
-  padding: "17px 0 0",
-};
-
-const paragraph = {
-  margin: "0 0 15px",
-  fontSize: "15px",
-  lineHeight: "1.4",
-  color: "#3c4149",
-};
-
-const buttonContainer = {
-  padding: "27px 0 27px",
-};
-
-const button = {
-  backgroundColor: "#5e6ad2",
-  borderRadius: "3px",
-  fontWeight: "600",
-  color: "#fff",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  padding: "11px 23px",
-};
-
-const reportLink = {
-  fontSize: "14px",
-  color: "#b4becc",
-};
-
-const hr = {
-  borderColor: "#dfe1e4",
-  margin: "42px 0 26px",
-};
-
-const code = {
-  fontFamily: "monospace",
-  fontWeight: "700",
-  padding: "1px 4px",
-  backgroundColor: "#dfe1e4",
-  letterSpacing: "-0.3px",
-  fontSize: "21px",
-  borderRadius: "4px",
-  color: "#3c4149",
-};
+export default AroraInviteUserEmail;

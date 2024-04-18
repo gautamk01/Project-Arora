@@ -79,6 +79,7 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
     setAllTickets([...allTickets, ticket]);
   };
 
+  // Create Ticket Form section
   const handleCreateTicket = () => {
     setOpen(
       <CustomModal
@@ -94,6 +95,7 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
     );
   };
 
+  //Create Lane Form section
   const handleEditLane = () => {
     setOpen(
       <CustomModal title="Edit Lane Details" subheading="">
@@ -102,6 +104,7 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
     );
   };
 
+  //Delete Lane Handler Section
   const handleDeleteLane = async () => {
     try {
       const response = await deleteLane(laneDetails.id);
@@ -183,11 +186,11 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                     type="ticket"
                   >
                     {(provided) => (
-                      <div className=" max-h-[700px] overflow-auto pt-12 ">
+                      <div className="  max-h-[700px] overflow-auto pt-12  ">
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className="mt-2"
+                          className="mt-2 bg-slate-800 bg-opacity-40"
                         >
                           {tickets.map((ticket, index) => (
                             <PipelineTicket

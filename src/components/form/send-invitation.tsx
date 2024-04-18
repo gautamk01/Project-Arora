@@ -30,15 +30,26 @@ import { Button } from "../ui/button";
 import Loading from "../global/loading";
 import { saveActivityLogsNotification, sendInvitation } from "@/lib/queries";
 import { useToast } from "../ui/use-toast";
+import { useModal } from "@/Provider/modalProvider";
 
 interface SendInvitationProps {
   agencyId: string;
+  agencyName: string;
+  agencyImage: string;
+  userName: string;
 }
 
-const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
+const SendInvitation: React.FC<SendInvitationProps> = ({
+  agencyId,
+  agencyName,
+  agencyImage,
+  userName,
+}) => {
   const { toast } = useToast(); //creating a toast
+  const { setClose } = useModal();
   //zod configration for form verification
   const userDataSchema = z.object({
+    name: z.string(),
     email: z.string().email(),
     role: z.enum(["AGENCY_ADMIN", "SUBACCOUNT_USER", "SUBACCOUNT_GUEST"]),
   });
@@ -48,6 +59,7 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
     resolver: zodResolver(userDataSchema),
     mode: "onChange", //with zod resolver
     defaultValues: {
+      name: "",
       email: "",
       role: "SUBACCOUNT_USER",
     },
@@ -56,7 +68,15 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
   //creating the invitation
   const onSubmit = async (values: z.infer<typeof userDataSchema>) => {
     try {
-      const res = await sendInvitation(values.role, values.email, agencyId); //invoke the queries
+      const res = await sendInvitation(
+        values.role,
+        values.email,
+        values.name,
+        agencyId,
+        agencyName,
+        agencyImage,
+        userName
+      ); //invoke the queries
       //values from the props
       //when we are joining to the agency that's why we are giveing the agency Id
 
@@ -70,6 +90,7 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
         title: "Success",
         description: "Created and sent invitation",
       });
+      setClose();
     } catch (error) {
       console.log(error);
       //toast if there is any error
@@ -100,6 +121,20 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-6"
           >
+            <FormField
+              disabled={form.formState.isSubmitting}
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               disabled={form.formState.isSubmitting}
               control={form.control}
