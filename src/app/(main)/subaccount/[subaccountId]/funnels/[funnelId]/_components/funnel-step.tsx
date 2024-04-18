@@ -7,6 +7,13 @@ import { toast } from "@/components/ui/use-toast";
 import { FunnelPage } from "@prisma/client";
 import { Check, ExternalLink, LucideEdit } from "lucide-react";
 import React, { useEffect, useState } from "react";
+
+import {
+  DragDropContext,
+  DragStart,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import Link from "next/link";
 import FunnelPagePlaceholder from "@/components/icons/funnel-page-placeholder";
 
@@ -16,13 +23,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import FunnelStepCard from "./funnel-step-card";
 import { FunnelsForSubAccount } from "@/lib/type";
 import { useModal } from "@/Provider/modalProvider";
 import { upsertFunnelPage } from "@/lib/queries/funnelqueries";
-import CreateFunnelPage from "@/components/form/funnel-page";
-import FunnelStepCard from "./funnel-step-card";
-import { useRouter } from "next/navigation";
-import Pusher from "pusher-js";
+import CreateFunnelPage from "@/components/form/funnel-page-form";
+import page from "@/app/(main)/agency/[agencyid]/page";
 
 type Props = {
   funnel: FunnelsForSubAccount;
@@ -32,20 +38,18 @@ type Props = {
 };
 
 const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
-  //we needed to understand which funnel page is clicked for that we used this
+  const [pagesState, setPagesState] = useState(pages);
   const [clickedPage, setClickedPage] = useState<FunnelPage | undefined>(
     pages[0]
   );
-  const router = useRouter();
-  const { setOpen } = useModal();
-  const [pagesState, setPagesState] = useState(pages); //page state to store on the pages
   useEffect(() => {
-    console.log("Page is changeing");
+    console.log("There is a change in funnel ID");
     setPagesState(pages);
+    setClickedPage(pages[0]);
   }, [pages]);
-  var pusher = new Pusher("c7391e6605cf46af2da5", {
-    cluster: "ap2",
-  });
+
+  const { setOpen } = useModal();
+
   return (
     <AlertDialog>
       <div className="flex border-[1px] lg:!flex-row flex-col ">
@@ -55,8 +59,6 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
               <Check />
               Funnel Steps
             </div>
-            {/* we are getting all the pages 
-            for each pages we are returning a droppable */}
             {pagesState.length ? (
               <div>
                 {pagesState.map((page, idx) => (
@@ -65,8 +67,6 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
                     key={page.id}
                     onClick={() => setClickedPage(page)}
                   >
-                    {/* <p>{page.name}</p>
-                    Funnel Step Card */}
                     <FunnelStepCard
                       funnelPage={page}
                       index={idx}
@@ -103,7 +103,6 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
           </Button>
         </aside>
         <aside className="flex-[0.7] bg-muted p-4 ">
-          {/* only when we have the pages then only this will be present */}
           {!!pages.length ? (
             <Card className="h-full flex justify-between flex-col">
               <CardHeader>
@@ -120,7 +119,7 @@ const FunnelSteps = ({ funnel, funnelId, pages, subaccountId }: Props) => {
                       </div>
                       <LucideEdit
                         size={50}
-                        className="!text-muted-foreground absolute top-1/2 left-1/2 opacity-0 transofrm -translate-x-1/2 -translate-y-1/2 group-hover:opacity-100 transition-all duration-100"
+                        className="!text-muted-foreground absolute top-1/2 left-1/2 opacity-0 transform translate-x-1/2 translate-y-1/2 group-hover:opacity-100 transition-all duration-100"
                       />
                     </Link>
 

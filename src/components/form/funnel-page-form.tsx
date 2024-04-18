@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import {
   Card,
@@ -34,6 +34,7 @@ import {
 } from "@/lib/queries/funnelqueries";
 import { saveActivityLogsNotification } from "@/lib/queries";
 import { FunnelPageSchema } from "@/lib/type";
+import { useModal } from "@/Provider/modalProvider";
 
 interface CreateFunnelPageProps {
   defaultData?: FunnelPage;
@@ -50,6 +51,9 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
 }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const [loading, setloading] = useState(false);
+  const [copyloading, setcopyloading] = useState(false);
+  const { setClose } = useModal();
   //ch
   const form = useForm<z.infer<typeof FunnelPageSchema>>({
     resolver: zodResolver(FunnelPageSchema),
@@ -97,6 +101,9 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
         description: "Saves Funnel Page Details",
       });
       router.refresh();
+      if (!defaultData?.id) {
+        setClose();
+      }
     } catch (error) {
       console.log(error);
       toast({
@@ -171,6 +178,7 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                   disabled={form.formState.isSubmitting}
                   type="button"
                   onClick={async () => {
+                    setcopyloading(true);
                     const response = await deleteFunnelePage(
                       defaultData.id,
                       funnelId,
@@ -185,10 +193,10 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                       title: "Success",
                       description: "Deleted a Funnel page ❌",
                     });
-                    router.refresh();
+                    setcopyloading(false);
                   }}
                 >
-                  {form.formState.isSubmitting ? <Loading /> : <Trash />}
+                  {copyloading ? <Loading /> : <Trash />}
                 </Button>
               )}
 
@@ -200,6 +208,7 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                   disabled={form.formState.isSubmitting}
                   type="button"
                   onClick={async () => {
+                    setloading(true);
                     const response = await getFunnels(subaccountId);
                     const lastFunnelPage = response.find(
                       (funnel) => funnel.id === funnelId
@@ -222,10 +231,11 @@ const CreateFunnelPage: React.FC<CreateFunnelPageProps> = ({
                       title: "Success",
                       description: "Copied and Save Funnel Page Details",
                     });
+                    setloading(false);
                     router.refresh();
                   }}
                 >
-                  {form.formState.isSubmitting ? <Loading /> : <CopyPlusIcon />}
+                  {loading ? <Loading /> : <CopyPlusIcon />}
                 </Button>
               )}
             </div>
