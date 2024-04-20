@@ -6,6 +6,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImagesIcon, Plus, SettingsIcon, SquareStackIcon } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useEditor } from "@/Provider/editor/editor-provider";
 import clsx from "clsx";
@@ -34,7 +37,36 @@ const FunnelEditorSidebar = ({ subaccountId }: Props) => {
             { hidden: state.editor.previewMode }
           )}
         >
-          <TabList />
+          <TabsList className="flex items-center flex-col justify-evenly w-full bg-transparent h-fit gap-4">
+            {/* Settings Tab */}
+            <TabsTrigger
+              value="Settings"
+              className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+            >
+              <SettingsIcon />
+            </TabsTrigger>
+            {/* Components Tab */}
+            <TabsTrigger
+              value="Components"
+              className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+            >
+              <Plus />
+            </TabsTrigger>
+            {/* layers Tab */}
+            <TabsTrigger
+              value="Layers"
+              className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+            >
+              <SquareStackIcon />
+            </TabsTrigger>
+            {/* Media Tab */}
+            <TabsTrigger
+              value="Media"
+              className="w-10 h-10 p-0 data-[state=active]:bg-muted"
+            >
+              <ImagesIcon />
+            </TabsTrigger>
+          </TabsList>
         </SheetContent>
 
         {/* Sheet: This is for render the contents for secific tabs */}
@@ -47,6 +79,7 @@ const FunnelEditorSidebar = ({ subaccountId }: Props) => {
           )}
         >
           <div className=" grid gap-4 h-full pb-36 overflow-scroll">
+            {/* Setting sheet Section  */}
             <TabsContent value="Settings">
               <SheetHeader className=" text-left p-6">
                 <SheetTitle>Style</SheetTitle>
@@ -57,9 +90,11 @@ const FunnelEditorSidebar = ({ subaccountId }: Props) => {
               </SheetHeader>
               <SettingTabs />
             </TabsContent>
+            {/* Media sheet Section  */}
             <TabsContent value="Media">
               <MediaTab subaccountId={subaccountId} />
             </TabsContent>
+            {/* Component Sheet Section */}
             <TabsContent value="Components">
               <SheetHeader className=" text-left p-6">
                 <SheetTitle>Components </SheetTitle>
@@ -68,6 +103,15 @@ const FunnelEditorSidebar = ({ subaccountId }: Props) => {
                 </SheetDescription>
               </SheetHeader>
               <ComponentsTab />
+            </TabsContent>
+            {/* layer Sheet Section */}
+            <TabsContent value="Layers">
+              <SheetHeader className=" text-left p-6">
+                <SheetTitle>Layers </SheetTitle>
+                <SheetDescription>
+                  Work in Progress , Feature will be Updated soon
+                </SheetDescription>
+              </SheetHeader>
             </TabsContent>
           </div>
         </SheetContent>

@@ -23,10 +23,8 @@ import { v4 } from "uuid";
 import {
   deleteTag,
   getTagsForSubaccount,
-  saveActivityLogsNotification,
   upsertTag,
-} from "@/lib/queries";
-
+} from "@/lib/queries/pipelinequeries";
 import {
   Command,
   CommandEmpty,
@@ -36,6 +34,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { saveActivityLogsNotification } from "@/lib/queries";
 
 type Props = {
   subAccountId: string;

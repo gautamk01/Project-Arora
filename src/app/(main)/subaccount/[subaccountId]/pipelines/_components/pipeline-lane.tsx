@@ -21,7 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteLane, saveActivityLogsNotification } from "@/lib/queries";
+import { saveActivityLogsNotification } from "@/lib/queries";
 import { LaneDetail, TicketWithTags } from "@/lib/type";
 import { cn } from "@/lib/utils";
 import { useModal } from "@/Provider/modalProvider";
@@ -33,6 +33,7 @@ import React, { Dispatch, SetStateAction, useMemo } from "react";
 import CustomModal from "@/components/global/custom-modal";
 import TicketForm from "@/components/form/ticket-form";
 import PipelineTicket from "./pipeline-ticket";
+import { deleteLane } from "@/lib/queries/pipelinequeries";
 // import PipelineTicket from "./pipeline-ticket";
 
 interface PipelaneLaneProps {

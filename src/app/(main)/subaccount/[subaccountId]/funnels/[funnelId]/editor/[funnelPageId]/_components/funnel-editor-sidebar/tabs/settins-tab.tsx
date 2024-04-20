@@ -39,12 +39,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import PercentageSlider from "./slider";
 
 type Props = {};
 
 const SettingTabs = (props: Props) => {
-  const { state, dispatch } = useEditor();
+  const { state, dispatch } = useEditor(); //invoking the global stateManagement
 
+  console.log(state.editor.selectedElement.style.opacity);
+  //Handler to handle custom values
   const handleChangeCustomValues = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     const settingProperty = target.id; //getting the propery by the id
@@ -68,6 +71,7 @@ const SettingTabs = (props: Props) => {
     });
   };
 
+  //Handler to handle all the tools
   const handleOnChanges = (
     e:
       | React.FormEvent<HTMLInputElement>
@@ -128,6 +132,7 @@ const SettingTabs = (props: Props) => {
         className="w-full"
         defaultValue={["Typography", "Dimensions", "Decorations", "Flexbox"]}
       >
+        {/* Custom Property settings will be show Here   */}
         <AccordionItem value="Custom" className="px-6 py-0  ">
           <AccordionTrigger className="!no-underline">Custom</AccordionTrigger>
           <AccordionContent>
@@ -145,11 +150,14 @@ const SettingTabs = (props: Props) => {
               )}
           </AccordionContent>
         </AccordionItem>
+
+        {/* Typography Property settings will be show Here   */}
         <AccordionItem value="Typography" className="px-6 py-0  border-y-[1px]">
           <AccordionTrigger className="!no-underline">
             Typography
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2 ">
+            {/* Text Align Section  */}
             <div className="flex flex-col gap-2 ">
               <p className="text-muted-foreground">Text Align</p>
               <Tabs
@@ -191,6 +199,7 @@ const SettingTabs = (props: Props) => {
                 </TabsList>
               </Tabs>
             </div>
+            {/* Font Family section */}
             <div className="flex flex-col gap-2">
               <p className="text-muted-foreground">Font Family</p>
               <Input
@@ -199,6 +208,7 @@ const SettingTabs = (props: Props) => {
                 value={state.editor.selectedElement.style.fontFamily}
               />
             </div>
+            {/* Color Section  */}
             <div className="flex flex-col gap-2">
               <p className="text-muted-foreground">Color</p>
               <Input
@@ -207,6 +217,7 @@ const SettingTabs = (props: Props) => {
                 value={state.editor.selectedElement.style.color}
               />
             </div>
+            {/* font weight section */}
             <div className="flex gap-4">
               <div>
                 <Label className="text-muted-foreground">Weight</Label>
@@ -245,120 +256,162 @@ const SettingTabs = (props: Props) => {
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="Dimensions" className=" px-6 py-0 ">
+
+        {/* Dimensions Property settings will be show Here */}
+        <AccordionItem value="Dimensions" className="px-6 py-0">
           <AccordionTrigger className="!no-underline">
             Dimensions
           </AccordionTrigger>
           <AccordionContent>
+            {/* Section for inputting width and height */}
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <div className="flex gap-4 flex-col">
-                  <div className="flex gap-4">
-                    <div>
-                      <Label className="text-muted-foreground">Height</Label>
-                      <Input
-                        id="height"
-                        placeholder="px"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.height}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Width</Label>
-                      <Input
-                        placeholder="px"
-                        id="width"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.width}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <p>Margin px</p>
-                <div className="flex gap-4 flex-col">
-                  <div className="flex gap-4">
-                    <div>
-                      <Label className="text-muted-foreground">Top</Label>
-                      <Input
-                        id="marginTop"
-                        placeholder="px"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.marginTop}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Bottom</Label>
-                      <Input
-                        placeholder="px"
-                        id="marginBottom"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.marginBottom}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div>
-                      <Label className="text-muted-foreground">Left</Label>
-                      <Input
-                        placeholder="px"
-                        id="marginLeft"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.marginLeft}
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-muted-foreground">Right</Label>
-                      <Input
-                        placeholder="px"
-                        id="marginRight"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.marginRight}
-                      />
+                {/* Height and width section  */}
+                <div className=" p-2 ">
+                  <p className=" pb-3">Height & width</p>
+                  <div className="flex gap-4 flex-col">
+                    <div className="flex gap-4">
+                      {/* Height input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Height</Label>
+                        <Input
+                          id="height"
+                          placeholder="px"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.height || ""
+                          }
+                        />
+                      </div>
+                      {/* Width input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Width</Label>
+                        <Input
+                          placeholder="px"
+                          id="width"
+                          onChange={handleOnChanges}
+                          value={state.editor.selectedElement.style.width || ""}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <p>Padding px</p>
-                <div className="flex gap-4 flex-col">
-                  <div className="flex gap-4">
-                    <div>
-                      <Label className="text-muted-foreground">Top</Label>
-                      <Input
-                        placeholder="px"
-                        id="paddingTop"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.paddingTop}
-                      />
+                {/* Margin settings section */}
+                <div className="p-2">
+                  <p className="pb-2">Margin px</p>
+                  <div className="flex gap-4 flex-col">
+                    <div className="flex gap-4">
+                      {/* Margin top input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Top</Label>
+                        <Input
+                          id="marginTop"
+                          placeholder="px"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.marginTop || ""
+                          }
+                        />
+                      </div>
+                      {/* Margin bottom input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Bottom</Label>
+                        <Input
+                          placeholder="px"
+                          id="marginBottom"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.marginBottom ||
+                            ""
+                          }
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground">Bottom</Label>
-                      <Input
-                        placeholder="px"
-                        id="paddingBottom"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.paddingBottom}
-                      />
+                    <div className="flex gap-4">
+                      {/* Margin left input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Left</Label>
+                        <Input
+                          placeholder="px"
+                          id="marginLeft"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.marginLeft || ""
+                          }
+                        />
+                      </div>
+                      {/* Margin right input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Right</Label>
+                        <Input
+                          placeholder="px"
+                          id="marginRight"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.marginRight || ""
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex gap-4">
-                    <div>
-                      <Label className="text-muted-foreground">Left</Label>
-                      <Input
-                        placeholder="px"
-                        id="paddingLeft"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.paddingLeft}
-                      />
+                </div>
+                {/* Padding settings section */}
+                <div className=" p-2">
+                  <p className=" pb-2">Padding px</p>
+                  <div className="flex gap-4 flex-col">
+                    <div className="flex gap-4">
+                      {/* Padding top input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Top</Label>
+                        <Input
+                          placeholder="px"
+                          id="paddingTop"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.paddingTop || ""
+                          }
+                        />
+                      </div>
+                      {/* Padding bottom input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Bottom</Label>
+                        <Input
+                          placeholder="px"
+                          id="paddingBottom"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.paddingBottom ||
+                            ""
+                          }
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label className="text-muted-foreground">Right</Label>
-                      <Input
-                        placeholder="px"
-                        id="paddingRight"
-                        onChange={handleOnChanges}
-                        value={state.editor.selectedElement.style.paddingRight}
-                      />
+                    <div className="flex gap-4">
+                      {/* Padding left input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Left</Label>
+                        <Input
+                          placeholder="px"
+                          id="paddingLeft"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.paddingLeft || ""
+                          }
+                        />
+                      </div>
+                      {/* Padding right input section */}
+                      <div>
+                        <Label className="text-muted-foreground">Right</Label>
+                        <Input
+                          placeholder="px"
+                          id="paddingRight"
+                          onChange={handleOnChanges}
+                          value={
+                            state.editor.selectedElement.style.paddingRight ||
+                            ""
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -366,12 +419,15 @@ const SettingTabs = (props: Props) => {
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="Decorations" className="px-6 py-0 ">
+
+        {/* Decorations Property settings will be shown Here */}
+        <AccordionItem value="Decorations" className="px-6 py-0">
           <AccordionTrigger className="!no-underline">
             Decorations
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4">
-            <div>
+            {/* Opacity setting section */}
+            <div className="p-2">
               <Label className="text-muted-foreground">Opacity</Label>
               <div className="flex items-center justify-end">
                 <small className="p-2">
@@ -386,30 +442,21 @@ const SettingTabs = (props: Props) => {
                   %
                 </small>
               </div>
-              <Slider
-                onValueChange={(e) => {
+
+              <PercentageSlider
+                defaultValue={state.editor.selectedElement.style?.opacity}
+                onValueChange={(e: any) => {
                   handleOnChanges({
                     target: {
                       id: "opacity",
-                      value: `${e[0]}%`,
+                      value: e.target.value, // Correctly accessing the value from the event object
                     },
                   });
                 }}
-                defaultValue={[
-                  typeof state.editor.selectedElement.style?.opacity ===
-                  "number"
-                    ? state.editor.selectedElement.style?.opacity
-                    : parseFloat(
-                        (
-                          state.editor.selectedElement.style?.opacity || "0"
-                        ).replace("%", "")
-                      ) || 0,
-                ]}
-                max={100}
-                step={1}
               />
             </div>
-            <div>
+            {/* Border radius setting section */}
+            <div className="p-2">
               <Label className="text-muted-foreground">Border Radius</Label>
               <div className="flex items-center justify-end">
                 <small className="">
@@ -425,33 +472,23 @@ const SettingTabs = (props: Props) => {
                   px
                 </small>
               </div>
-              <Slider
-                onValueChange={(e) => {
+
+              <PercentageSlider
+                defaultValue={state.editor.selectedElement.style?.borderRadius}
+                onValueChange={(e: any) => {
                   handleOnChanges({
                     target: {
                       id: "borderRadius",
-                      value: `${e[0]}px`,
+                      value: e.target.value, // Correctly accessing the value from the event object
                     },
                   });
                 }}
-                defaultValue={[
-                  typeof state.editor.selectedElement.style?.borderRadius ===
-                  "number"
-                    ? state.editor.selectedElement.style?.borderRadius
-                    : parseFloat(
-                        (
-                          state.editor.selectedElement.style?.borderRadius ||
-                          "0"
-                        ).replace("%", "")
-                      ) || 0,
-                ]}
-                max={100}
-                step={1}
               />
             </div>
-            <div className="flex flex-col gap-2">
+            {/* Background color input section */}
+            <div className="flex flex-col gap-2 p-2">
               <Label className="text-muted-foreground">Background Color</Label>
-              <div className="flex  border-[1px] rounded-md overflow-clip">
+              <div className="flex border-[1px] rounded-md overflow-clip">
                 <div
                   className="w-12 "
                   style={{
@@ -464,13 +501,16 @@ const SettingTabs = (props: Props) => {
                   className="!border-y-0 rounded-none !border-r-0 mr-2"
                   id="backgroundColor"
                   onChange={handleOnChanges}
-                  value={state.editor.selectedElement.style.backgroundColor}
+                  value={
+                    state.editor.selectedElement.style.backgroundColor || ""
+                  }
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-2">
+            {/* Background image input section */}
+            <div className="flex flex-col gap-2 p-2">
               <Label className="text-muted-foreground">Background Image</Label>
-              <div className="flex  border-[1px] rounded-md overflow-clip">
+              <div className="flex border-[1px] rounded-md overflow-clip">
                 <div
                   className="w-12 "
                   style={{
@@ -483,11 +523,14 @@ const SettingTabs = (props: Props) => {
                   className="!border-y-0 rounded-none !border-r-0 mr-2"
                   id="backgroundImage"
                   onChange={handleOnChanges}
-                  value={state.editor.selectedElement.style.backgroundImage}
+                  value={
+                    state.editor.selectedElement.style.backgroundImage || ""
+                  }
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-2">
+            {/* Image position setting section */}
+            <div className="flex flex-col gap-2 p-2">
               <Label className="text-muted-foreground">Image Position</Label>
               <Tabs
                 onValueChange={(e) =>
@@ -524,9 +567,12 @@ const SettingTabs = (props: Props) => {
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="Flexbox" className="px-6 py-0  ">
+
+        {/* Flexbox Property settings will be shown Here */}
+        <AccordionItem value="Flexbox" className="px-6 py-0">
           <AccordionTrigger className="!no-underline">Flexbox</AccordionTrigger>
           <AccordionContent>
+            {/* Justify content setting section */}
             <Label className="text-muted-foreground">Justify Content</Label>
             <Tabs
               onValueChange={(e) =>
@@ -572,6 +618,7 @@ const SettingTabs = (props: Props) => {
                 </TabsTrigger>
               </TabsList>
             </Tabs>
+            {/* Align items setting section */}
             <Label className="text-muted-foreground">Align Items</Label>
             <Tabs
               onValueChange={(e) =>
@@ -599,6 +646,7 @@ const SettingTabs = (props: Props) => {
                 </TabsTrigger>
               </TabsList>
             </Tabs>
+            {/* Flex display toggle section */}
             <div className="flex items-center gap-2">
               <Input
                 className="h-4 w-4"
@@ -616,13 +664,14 @@ const SettingTabs = (props: Props) => {
               />
               <Label className="text-muted-foreground">Flex</Label>
             </div>
+            {/* Flex direction input section */}
             <div>
-              <Label className="text-muted-foreground"> Direction</Label>
+              <Label className="text-muted-foreground">Direction</Label>
               <Input
                 placeholder="px"
                 id="flexDirection"
                 onChange={handleOnChanges}
-                value={state.editor.selectedElement.style.flexDirection}
+                value={state.editor.selectedElement.style.flexDirection || ""}
               />
             </div>
           </AccordionContent>

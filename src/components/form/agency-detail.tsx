@@ -54,10 +54,9 @@ type Props = {
   data?: Partial<Agency>; // this means that we are assigning a generic type to data as Agency
 };
 
-import { FormSchema } from "./Components/zod_form";
-import Formp from "./Components/Formp1";
 import { Switch } from "../ui/switch";
 import { Input } from "../ui/input";
+import { agencyFormSchema } from "@/lib/type";
 // Here using zod we are just assigning the validation to the form
 
 // Agency Form
@@ -65,13 +64,13 @@ const AgencyDetails = ({ data }: Props) => {
   const { toast } = useToast(); // to show the notification
   const router = useRouter();
   const [deletingAgency, setDeletingAgency] = useState(false);
-  type FormField = z.infer<typeof FormSchema>;
+  type FormField = z.infer<typeof agencyFormSchema>;
 
   const form_validation = useForm<FormField>({
     // this line of code initializes a form state manager using the useForm hook
     //  with a TypeScript type inferred from a Zod schema named FormSchema.
     mode: "onChange", //This tells react-hook-form to trigger validation and form re-rendering every time the value of any form field changes.
-    resolver: zodResolver(FormSchema), // This sets up Zod as your validation engine This going to connect Schema to useForm hook
+    resolver: zodResolver(agencyFormSchema), // This sets up Zod as your validation engine This going to connect Schema to useForm hook
 
     // They are the inital values
     //These values are populated based on the data prop passed into your component.
@@ -100,7 +99,9 @@ const AgencyDetails = ({ data }: Props) => {
     }
   }, [data]);
 
-  const handleSubmit_here = async (values: z.infer<typeof FormSchema>) => {
+  const handleSubmit_here = async (
+    values: z.infer<typeof agencyFormSchema>
+  ) => {
     try {
       let newUserData;
       let custId;

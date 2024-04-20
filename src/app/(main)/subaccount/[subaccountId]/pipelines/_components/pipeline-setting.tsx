@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { deletePipeline } from "@/lib/queries";
+import { deletePipeline } from "@/lib/queries/pipelinequeries";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import CreatePipelineForm from "@/components/form/create-pipeline-form";

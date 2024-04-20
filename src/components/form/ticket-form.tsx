@@ -30,12 +30,7 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 
-import {
-  getSubAccountTeamMembers,
-  saveActivityLogsNotification,
-  searchContacts,
-  upsertTicket,
-} from "@/lib/queries";
+import { saveActivityLogsNotification } from "@/lib/queries";
 import { TicketFormSchema, TicketWithTags } from "@/lib/type";
 import { useModal } from "@/Provider/modalProvider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -49,6 +44,11 @@ import Loading from "../global/loading";
 import { cn } from "@/lib/utils";
 import { toast } from "../ui/use-toast";
 import TagCreator from "../global/tag-creator";
+import {
+  upsertTicket,
+  getSubAccountTeamMembers,
+  searchContacts,
+} from "@/lib/queries/pipelinequeries";
 
 type Props = {
   laneId: string;

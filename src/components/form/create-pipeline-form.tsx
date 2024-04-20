@@ -23,17 +23,15 @@ import { Input } from "../ui/input";
 
 import { Button } from "../ui/button";
 import Loading from "../global/loading";
-import {
-  saveActivityLogsNotification,
-  upsertFunnel,
-  upsertPipeline,
-} from "@/lib/queries";
+import { saveActivityLogsNotification } from "@/lib/queries";
 import { v4 } from "uuid";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useModal } from "@/Provider/modalProvider";
 import { CreatePipelineFormSchema } from "@/lib/type";
+import { upsertPipeline } from "@/lib/queries/pipelinequeries";
+import { upsertFunnel } from "@/lib/queries/funnelqueries";
 
 interface CreatePipelineFormProps {
   defaultData?: Pipeline;

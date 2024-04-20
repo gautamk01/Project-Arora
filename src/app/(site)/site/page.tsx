@@ -1,7 +1,7 @@
 "use client";
 
-import Section_1 from "@/components/siteSection/section1";
-import Section_2 from "@/components/siteSection/section2";
+import Section_1 from "@/components/site-section/section1";
+import Section_2 from "@/components/site-section/section2";
 
 import React, { useState } from "react";
 //use State

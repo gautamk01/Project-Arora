@@ -5,7 +5,7 @@ import {
   getPipelineDetails,
   updateLanesOrder,
   updateTicketsOrder,
-} from "@/lib/queries";
+} from "@/lib/queries/pipelinequeries";
 import { LaneDetail } from "@/lib/type";
 import { redirect } from "next/navigation";
 import React from "react";

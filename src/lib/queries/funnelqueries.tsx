@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { v4 } from "uuid";
 import { FunnelProduct } from "@prisma/client";
-const Pusher = require("pusher");
+
 export const upsertFunnel = async (
   subaccountId: string,
   funnel: z.infer<typeof CreateFunnelFormSchema> & { liveProducts: string },
@@ -117,16 +117,7 @@ export const upsertFunnelPage = async (
       funnelId,
     },
   });
-  const pusher = new Pusher({
-    appId: "1785459",
-    key: "c7391e6605cf46af2da5",
-    secret: "f668bd3615343f90562d",
-    cluster: "ap2",
-    useTLS: true,
-  });
-  pusher.trigger("my-channel", "my-event", {
-    response,
-  });
+
   return response;
 };
 export const DeleteFunnel = async (subaccountId: string, funnelId: string) => {

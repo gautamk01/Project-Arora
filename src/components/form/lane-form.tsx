@@ -23,17 +23,14 @@ import { Input } from "../ui/input";
 
 import { Button } from "../ui/button";
 import Loading from "../global/loading";
-import {
-  getPipelineDetails,
-  saveActivityLogsNotification,
-  upsertLane,
-} from "@/lib/queries";
+import { getPipelineDetails, upsertLane } from "@/lib/queries/pipelinequeries";
 import { v4 } from "uuid";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useModal } from "@/Provider/modalProvider";
 import { LaneFormSchema } from "@/lib/type";
+import { saveActivityLogsNotification } from "@/lib/queries";
 
 interface CreateLaneFormProps {
   defaultData?: Lane;
