@@ -34,6 +34,7 @@ import CustomModal from "@/components/global/custom-modal";
 import TicketForm from "@/components/form/ticket-form";
 import PipelineTicket from "./pipeline-ticket";
 import { deleteLane } from "@/lib/queries/pipelinequeries";
+import { StrictModeDroppable } from "@/components/global/strictdropable";
 // import PipelineTicket from "./pipeline-ticket";
 
 interface PipelaneLaneProps {
@@ -149,12 +150,12 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
           <div
             {...provided.draggableProps}
             ref={provided.innerRef}
-            className="h-full"
+            className="h-full shadow-lg "
           >
             {/* this is just a component that has a 1. dropdown 2.delete 3.edit and 4.ticket */}
             <AlertDialog>
               <DropdownMenu>
-                <div className="bg-slate-200/30 dark:bg-background/20  h-[700px] w-[300px] px-4 relative rounded-lg overflow-visible flex-shrink-0 ">
+                <div className="bg-slate-200/30 dark:bg-background/20  border border-solid border-gray h-[700px] w-[300px] px-4 relative rounded-lg overflow-visible flex-shrink-0 ">
                   <div
                     {...provided.dragHandleProps}
                     className=" h-14 backdrop-blur-lg dark:bg-background/40 bg-slate-200/60  absolute top-0 left-0 right-0 z-10 "
@@ -181,17 +182,17 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                     </div>
                   </div>
 
-                  <Droppable
+                  <StrictModeDroppable
                     droppableId={laneDetails.id.toString()}
                     key={laneDetails.id}
                     type="ticket"
                   >
                     {(provided) => (
-                      <div className="  max-h-[700px] overflow-auto pt-12  ">
+                      <div className="  max-h-[700px] h-full overflow-auto pt-12  ">
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className="mt-2 bg-slate-800 bg-opacity-40"
+                          className="mt-2 bg-slate-800/10 bg-opacity-40"
                         >
                           {tickets.map((ticket, index) => (
                             <PipelineTicket
@@ -207,7 +208,7 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                         </div>
                       </div>
                     )}
-                  </Droppable>
+                  </StrictModeDroppable>
 
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Options</DropdownMenuLabel>

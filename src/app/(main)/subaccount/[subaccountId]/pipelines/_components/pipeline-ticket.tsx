@@ -116,8 +116,12 @@ const PipelineTicket = ({
   return (
     <Draggable draggableId={ticket.id.toString()} index={index}>
       {(provided, snapshot) => {
+        const scrollY = window.scrollY; // Get current vertical scroll position
+        const offsetY = -0.5 * scrollY; // Calculate offset based on scroll, adjust factor as needed
+
         if (snapshot.isDragging) {
-          const offset = { x: 300, y: -50 };
+          const offset = { x: 300, y: -100 };
+
           //@ts-ignore
           const x = provided.draggableProps.style?.left - offset.x;
           //@ts-ignore

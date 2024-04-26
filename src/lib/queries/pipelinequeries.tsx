@@ -1,3 +1,5 @@
+"use server";
+
 //++++++++++++++++++++++++++++++++++Pipeline query section/+++++++++++++++++++++++++++++++++++++
 
 import { Lane, Prisma, Tag, Ticket } from "@prisma/client";

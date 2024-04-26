@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import PipelineLane from "./pipeline-lane";
 import { useRouter } from "next/navigation";
+import { StrictModeDroppable } from "@/components/global/strictdropable";
 
 type Props = {
   lanes: LaneDetail[];
@@ -135,62 +136,63 @@ const PipelineView = ({
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className="bg-white/60 dark:bg-background/60 rounded-xl p-4 use-automation-zoom-in">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl">{pipelineDetails?.name}</h1>
-          <Button className="flex items-center gap-4" onClick={handleAddLane}>
-            <Plus size={15} />
-            Create Lane
-          </Button>
-        </div>
+    <>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl">{pipelineDetails?.name}</h1>
+        <Button className="flex items-center gap-4" onClick={handleAddLane}>
+          <Plus size={15} />
+          Create Lane
+        </Button>
+      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="bg-white/60 dark:bg-background/60 rounded-xl p-4 use-automation-zoom-in">
+          <StrictModeDroppable
+            droppableId="lanes"
+            type="lane"
+            direction="horizontal"
+            key="lanes"
+          >
+            {/* provided is a syntax followed by reactDND */}
+            {(provided) => (
+              <div
+                className="flex item-center gap-x-2 overflow-auto"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                <div className="flex mt-4">
+                  {allLanes.map((lane, index) => (
+                    <PipelineLane
+                      allTickets={allTickets}
+                      setAllTickets={setAllTickets}
+                      subaccountId={subaccountId}
+                      pipelineId={pipelineId}
+                      tickets={lane.Tickets}
+                      laneDetails={lane}
+                      index={index}
+                      key={lane.id}
+                    />
+                  ))}
+                  {provided.placeholder}
+                </div>
+              </div>
+            )}
+          </StrictModeDroppable>
 
-        <Droppable
-          droppableId="lanes"
-          type="lane"
-          direction="horizontal"
-          key="lanes"
-        >
-          {/* provided is a syntax followed by reactDND */}
-          {(provided) => (
-            <div
-              className="flex item-center gap-x-2  overflow-auto"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              <div className="flex mt-4">
-                {allLanes.map((lane, index) => (
-                  <PipelineLane
-                    allTickets={allTickets}
-                    setAllTickets={setAllTickets}
-                    subaccountId={subaccountId}
-                    pipelineId={pipelineId}
-                    tickets={lane.Tickets}
-                    laneDetails={lane}
-                    index={index}
-                    key={lane.id}
-                  />
-                ))}
-                {provided.placeholder}
+          {/* If the Pipeline is empty it shows a Flag  */}
+          {allLanes.length == 0 && (
+            <div className="flex items-center justify-center w-full flex-col">
+              <div className="opacity-100">
+                <Flag
+                  width="100%"
+                  height="100%"
+                  className="text-muted-foreground"
+                />
               </div>
             </div>
           )}
-        </Droppable>
-
-        {/* If the Pipeline is empty it shows a Flag  */}
-        {allLanes.length == 0 && (
-          <div className="flex items-center justify-center w-full flex-col">
-            <div className="opacity-100">
-              <Flag
-                width="100%"
-                height="100%"
-                className="text-muted-foreground"
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    </DragDropContext>
+        </div>
+      </DragDropContext>
+    </>
   );
 };
 
