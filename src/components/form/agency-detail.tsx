@@ -105,29 +105,6 @@ const AgencyDetails = ({ data }: Props) => {
     try {
       let newUserData;
       let custId;
-      if (!data?.id) {
-        const bodyData = {
-          email: values.companyEmail,
-          name: values.name,
-          shipping: {
-            address: {
-              city: values.city,
-              country: values.country,
-              line1: values.address,
-              postal_code: values.zipCode,
-              state: values.zipCode,
-            },
-            name: values.name,
-          },
-          address: {
-            city: values.city,
-            country: values.country,
-            line1: values.address,
-            postal_code: values.zipCode,
-            state: values.zipCode,
-          },
-        };
-      }
       newUserData = await initUser({ role: "AGENCY_OWNER" });
       const response = await upsertAgency({
         id: data?.id ? data.id : v4(),
@@ -144,7 +121,7 @@ const AgencyDetails = ({ data }: Props) => {
         updatedAt: new Date(),
         companyEmail: values.companyEmail,
         connectAccountId: "",
-        goal: 5,
+        goal: data?.goal ? data.goal : 5,
       });
 
       if (data?.id) {
@@ -382,7 +359,12 @@ const AgencyDetails = ({ data }: Props) => {
                     onValueChange={async (val) => {
                       if (!data?.id) return;
                       //passing the goal val to that specific id
-                      await updateAgencyDetails(data.id, { goal: val });
+                      try {
+                        await updateAgencyDetails(data.id, { goal: val });
+                      } catch (error) {
+                        console.log(error);
+                      }
+
                       //we needed to give the notification to the agency
                       await saveActivityLogsNotification({
                         agencyId: data.id,

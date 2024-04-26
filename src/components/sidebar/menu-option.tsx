@@ -29,6 +29,7 @@ import { useModal } from "@/Provider/modalProvider";
 import SubAccountDetails from "../form/subaccount-details";
 import { Separator } from "../ui/separator";
 import { icons } from "@/lib/constants";
+import { usePathname } from "next/navigation";
 
 type Props = {
   defaultOpen?: boolean;
@@ -51,7 +52,8 @@ const MenuOption = ({
 }: Props) => {
   const [isMounted, setIsMounted] = useState(false); // to avoid Hydration error
   const { setOpen } = useModal(); //Calling from the Provider
-
+  const pathname = usePathname();
+  const present_pathname = pathname.split("/")[3] || "dashboard";
   //UseMemo is like a Caching System that willl help to improve the performance,when there is a change in defaultOpen
   //then only this function works
   const openState = useMemo(
@@ -281,11 +283,25 @@ const MenuOption = ({
                     return (
                       <CommandItem
                         key={sidebarOptions.id}
-                        className="md:w-[320px] w-full"
+                        className={clsx(
+                          "md:w-[320px] w-full hover:bg-slate-200/10 ",
+                          present_pathname ===
+                            sidebarOptions.name.toLowerCase() ||
+                            present_pathname === ""
+                            ? " bg-slate-950/10 dark:bg-accent"
+                            : "",
+                          sidebarOptions.name.toLowerCase() ===
+                            "sub accounts" &&
+                            present_pathname === "all-subaccounts"
+                            ? "bg-slate-950/10  dark:bg-accent"
+                            : ""
+                        )}
                       >
                         <Link
                           href={sidebarOptions.link}
-                          className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px]"
+                          className={clsx(
+                            "  flex items-center gap-2  rounded-md transition-all md:w-full w-[320px]"
+                          )}
                         >
                           {val}
                           <span>{sidebarOptions.name}</span>
