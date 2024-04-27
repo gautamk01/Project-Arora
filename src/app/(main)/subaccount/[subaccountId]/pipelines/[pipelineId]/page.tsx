@@ -12,6 +12,7 @@ import React from "react";
 import PipelineInfoBar from "../_components/pipeline-infobar";
 import PipelineSettings from "../_components/pipeline-setting";
 import PipelineView from "../_components/pipeline-view";
+import ClosedTickets from "../_components/closed_ticket";
 
 type Props = {
   params: { subaccountId: string; pipelineId: string };
@@ -41,6 +42,7 @@ async function PipelinePage({ params }: Props) {
         <div>
           <TabsTrigger value="view">Pipeline View</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="Closed">Closed Tickets</TabsTrigger>
         </div>
       </TabsList>
       <TabsContent value="view">
@@ -59,6 +61,9 @@ async function PipelinePage({ params }: Props) {
           pipelines={pipelines}
           subaccountId={params.subaccountId}
         />
+      </TabsContent>
+      <TabsContent value="Closed">
+        <ClosedTickets pipelineId={params.pipelineId} />
       </TabsContent>
     </Tabs>
   );

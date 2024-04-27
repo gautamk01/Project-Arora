@@ -35,11 +35,22 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { toast } from "@/components/ui/use-toast";
+import { db } from "@/lib/db";
 import { saveActivityLogsNotification } from "@/lib/queries";
-import { deleteTicket } from "@/lib/queries/pipelinequeries";
+import {
+  deleteTicket,
+  pipelineTicketClose,
+} from "@/lib/queries/pipelinequeries";
 import { TicketWithTags } from "@/lib/type";
 import { useModal } from "@/Provider/modalProvider";
-import { Contact2, Edit, MoreHorizontalIcon, Trash, User2 } from "lucide-react";
+import {
+  Contact2,
+  Edit,
+  MoreHorizontalIcon,
+  SidebarCloseIcon,
+  Trash,
+  User2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -73,6 +84,14 @@ const PipelineTicket = ({
     );
   };
 
+  const handleCloseTicket = async () => {
+    try {
+      await pipelineTicketClose(ticket.id);
+    } catch (error) {
+      console.log(error);
+    }
+    router.refresh();
+  };
   const handleClickEdit = async () => {
     setOpen(
       <CustomModal title="Update Ticket Details" subheading="">
@@ -243,6 +262,13 @@ const PipelineTicket = ({
                     >
                       <Edit size={15} />
                       Edit Ticket
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2"
+                      onClick={handleCloseTicket}
+                    >
+                      <SidebarCloseIcon size={16} />
+                      Close Ticket
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </Card>

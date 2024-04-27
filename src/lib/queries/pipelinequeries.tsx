@@ -273,3 +273,12 @@ export const getPipelines = async (subaccountId: string) => {
     },
   });
 };
+
+export const pipelineTicketClose = async (ticketId: string) => {
+  const response = await db.ticket.update({
+    where: { id: ticketId },
+    data: { status: "CLOSE" },
+  });
+
+  return response;
+};

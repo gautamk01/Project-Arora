@@ -25,6 +25,16 @@ type Props = {
   params: { subaccountId: string };
 };
 
+type TicketData = {
+  id: string;
+  status: string;
+  created: number;
+  amount_total: number;
+  customer_details: {
+    name: string;
+    email: string;
+  };
+};
 const Page = async ({ params }: Props) => {
   let currency = "INR";
   let sessions;
@@ -43,52 +53,65 @@ const Page = async ({ params }: Props) => {
   const startDate = new Date(`${currentYear}-01-01T00:00:00Z`).getTime() / 1000;
   const endDate = new Date(`${currentYear}-12-31T23:59:59Z`).getTime() / 1000;
   if (!subaccountDetails) return;
-  const checkoutSessions = {
-    data: [
-      {
-        id: "sess_1",
-        status: "complete",
-        created: Date.now() - 86400000, // Yesterday
-        amount_total: 50000, // $500.00
-        customer_details: { name: "John Doe", email: "john.doe@example.com" },
-      },
-      {
-        id: "sess_2",
-        status: "open",
-        created: Date.now() - 172800000, // 2 days ago
-        amount_total: 30000, // $300.00
-        customer_details: { name: "Jane Doe", email: "jane.doe@example.com" },
-      },
-      {
-        id: "sess_3",
-        status: "complete",
-        created: Date.now() - 400000000, // Open session
-        amount_total: 20000, // $200.00
-        customer_details: { name: "Jim Beam", email: "jim.beam@example.com" },
-      },
-      {
-        id: "sess_4",
-        status: "expired",
-        created: Date.now() - 500000000, // Expired session
-        amount_total: 25000, // $250.00
-        customer_details: {
-          name: "Jack Daniels",
-          email: "jack.daniels@example.com",
+
+  const tickets = await db.subAccount.findUnique({
+    where: {
+      id: params.subaccountId, // replace with the actual subAccountId
+    },
+    include: {
+      Pipeline: {
+        include: {
+          Lane: {
+            include: {
+              Tickets: {
+                include: {
+                  Customer: true, // Assuming you want customer details
+                  Assigned: true, // Assuming you want assigned user details
+                },
+              },
+            },
+          },
         },
       },
-      // Add more sessions as needed
-    ],
+    },
+  });
+
+  let data1: any = [];
+  // Iterate over the nested structure to access all tickets
+  tickets?.Pipeline.forEach((pipeline) => {
+    pipeline.Lane.forEach((lane) => {
+      lane.Tickets.forEach((ticket) => {
+        // For each ticket, create a structured object and push it to the data array
+        const valueInCents = ticket.value ? +ticket.value.toString() * 100 : 0;
+        data1.push({
+          id: ticket.id,
+          status: ticket.status, // Assuming status is stored directly in the ticket
+          created: new Date(ticket.createdAt).getTime(),
+          amount_total: valueInCents, // Assuming value needs to be transformed to cents
+          customer_details: ticket.Customer
+            ? {
+                name: ticket.Customer.name, // Assuming name is stored directly in the Customer model
+                email: ticket.Customer.email, // Assuming email is also stored directly
+              }
+            : { name: "Unknown", email: "No email provided" },
+        });
+      });
+    });
+  });
+  console.log(data1);
+  const checkoutSessions = {
+    data: data1,
   };
 
-  sessions = checkoutSessions.data.map((session) => ({
+  sessions = checkoutSessions.data.map((session: TicketData) => ({
     ...session,
     created: new Date(session.created).toLocaleDateString(),
     amount_total: session.amount_total ? session.amount_total / 100 : 0,
   }));
 
   totalClosedSessions = checkoutSessions.data
-    .filter((session) => session.status === "complete")
-    .map((session) => ({
+    .filter((session: TicketData) => session.status === "CLOSE")
+    .map((session: TicketData) => ({
       ...session,
       created: new Date(session.created).toLocaleDateString(),
       amount_total: session.amount_total ? session.amount_total / 100 : 0,
@@ -96,20 +119,29 @@ const Page = async ({ params }: Props) => {
 
   totalPendingSessions = checkoutSessions.data
     .filter(
-      (session) => session.status === "open" || session.status === "expired"
+      (session: TicketData) =>
+        session.status === "OPEN" || session.status === "expired"
     )
-    .map((session) => ({
+    .map((session: TicketData) => ({
       ...session,
       created: new Date(session.created).toLocaleDateString(),
       amount_total: session.amount_total ? session.amount_total / 100 : 0,
     }));
 
   net = +totalClosedSessions
-    .reduce((total, session) => total + (session.amount_total || 0), 0)
+    .reduce(
+      (total: number, session: TicketData) =>
+        total + (session.amount_total || 0),
+      0
+    )
     .toFixed(2);
 
   potentialIncome = +totalPendingSessions
-    .reduce((total, session) => total + (session.amount_total || 0), 0)
+    .reduce(
+      (total: number, session: TicketData) =>
+        total + (session.amount_total || 0),
+      0
+    )
     .toFixed(2);
 
   closingRate = +(
@@ -242,7 +274,7 @@ const Page = async ({ params }: Props) => {
                   </TableHeader>
                   <TableBody className="font-medium truncate">
                     {totalClosedSessions
-                      ? totalClosedSessions.map((session) => (
+                      ? totalClosedSessions.map((session: TicketData) => (
                           <TableRow key={session.id}>
                             <TableCell>
                               {session.customer_details?.email || "-"}

@@ -68,10 +68,12 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
   //cache them
 
   const laneAmt = useMemo(() => {
-    return tickets.reduce(
-      (sum, ticket) => sum + (Number(ticket?.value) || 0),
-      0
-    );
+    return tickets.reduce((sum, ticket) => {
+      if (ticket.status !== "CLOSE") {
+        return sum + (Number(ticket?.value) || 0);
+      }
+      return sum;
+    }, 0);
   }, [tickets]);
 
   //for createing a random color
@@ -194,16 +196,19 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                           ref={provided.innerRef}
                           className="mt-2 bg-slate-800/10 bg-opacity-40"
                         >
-                          {tickets.map((ticket, index) => (
-                            <PipelineTicket
-                              allTickets={allTickets}
-                              setAllTickets={setAllTickets}
-                              subaccountId={subaccountId}
-                              ticket={ticket}
-                              key={ticket.id.toString()}
-                              index={index}
-                            />
-                          ))}
+                          {tickets.map(
+                            (ticket, index) =>
+                              ticket.status !== "CLOSE" && (
+                                <PipelineTicket
+                                  allTickets={allTickets}
+                                  setAllTickets={setAllTickets}
+                                  subaccountId={subaccountId}
+                                  ticket={ticket}
+                                  key={ticket.id.toString()}
+                                  index={index}
+                                />
+                              )
+                          )}
                           {provided.placeholder}
                         </div>
                       </div>
