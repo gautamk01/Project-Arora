@@ -21,6 +21,11 @@ const TextComponent = ({ element }: Props) => {
     });
   };
 
+  const handleDragStart = (e: React.DragEvent, type: string) => {
+    if (type === null) return;
+    e.dataTransfer.setData("componentType", type);
+  };
+
   const style = element.style;
   const handleOnClickBody = (e: React.MouseEvent) => {
     //these element are within each other
@@ -39,6 +44,8 @@ const TextComponent = ({ element }: Props) => {
     //we are not adding the drag and drop here
     //Fix : Drag and drop
     <div
+      draggable
+      onDragStart={(e) => handleDragStart(e, "Text-element")}
       style={style}
       className={clsx(
         "p-[2px] w-full m-[5px] relative text-[16px] transition-all",

@@ -74,6 +74,18 @@ const Container = ({ element }: Props) => {
           },
         });
         break;
+      case "Text-element":
+        dispatch({
+          type: "ADD_ELEMENT",
+          payload: {
+            containerId: id,
+            elementDetails: {
+              ...state.editor.selectedElement,
+              id: v4(),
+            },
+          },
+        });
+        break;
       case "link":
         dispatch({
           type: "ADD_ELEMENT",

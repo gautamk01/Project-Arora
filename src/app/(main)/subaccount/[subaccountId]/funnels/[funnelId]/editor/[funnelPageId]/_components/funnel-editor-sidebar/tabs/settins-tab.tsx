@@ -456,7 +456,7 @@ const SettingTabs = (props: Props) => {
               />
             </div>
             {/* Border radius setting section */}
-            <div className="p-2">
+            <div>
               <Label className="text-muted-foreground">Border Radius</Label>
               <div className="flex items-center justify-end">
                 <small className="">
@@ -472,17 +472,28 @@ const SettingTabs = (props: Props) => {
                   px
                 </small>
               </div>
-
-              <PercentageSlider
-                defaultValue={state.editor.selectedElement.style?.borderRadius}
-                onValueChange={(e: any) => {
+              <Slider
+                onValueChange={(e) => {
                   handleOnChanges({
                     target: {
                       id: "borderRadius",
-                      value: e.target.value, // Correctly accessing the value from the event object
+                      value: `${e[0]}px`,
                     },
                   });
                 }}
+                defaultValue={[
+                  typeof state.editor.selectedElement.style?.borderRadius ===
+                  "number"
+                    ? state.editor.selectedElement.style?.borderRadius
+                    : parseFloat(
+                        (
+                          state.editor.selectedElement.style?.borderRadius ||
+                          "0"
+                        ).replace("%", "")
+                      ) || 0,
+                ]}
+                max={100}
+                step={1}
               />
             </div>
             {/* Background color input section */}

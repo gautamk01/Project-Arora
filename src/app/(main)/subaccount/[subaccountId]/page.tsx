@@ -54,14 +54,14 @@ const Page = async ({ params }: Props) => {
       },
       {
         id: "sess_2",
-        status: "complete",
+        status: "open",
         created: Date.now() - 172800000, // 2 days ago
         amount_total: 30000, // $300.00
         customer_details: { name: "Jane Doe", email: "jane.doe@example.com" },
       },
       {
         id: "sess_3",
-        status: "open",
+        status: "complete",
         created: Date.now() - 400000000, // Open session
         amount_total: 20000, // $200.00
         customer_details: { name: "Jim Beam", email: "jim.beam@example.com" },
@@ -174,7 +174,7 @@ const Page = async ({ params }: Props) => {
                       )}
                       {totalClosedSessions && (
                         <div className="flex flex-col">
-                          Won Carts
+                          Closed
                           <div className="flex gap-2">
                             <ShoppingCart className="text-emerald-700" />
                             {totalClosedSessions.length}
@@ -252,9 +252,7 @@ const Page = async ({ params }: Props) => {
                                 Paid
                               </Badge>
                             </TableCell>
-                            <TableCell>
-                              {new Date(session.created).toUTCString()}
-                            </TableCell>
+                            <TableCell>{session.created}</TableCell>
 
                             <TableCell className="text-right">
                               <small>{currency}</small>{" "}

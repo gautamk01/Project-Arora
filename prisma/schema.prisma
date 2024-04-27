@@ -47,6 +47,11 @@ enum Icon {
   clipboardIcon
 }
 
+enum Stat {
+  OPEN
+  CLOSE
+}
+
 //If there is a column of type Role can only store one of these four values.
 enum Role {
   AGENCY_OWNER
@@ -241,6 +246,7 @@ model Ticket {
 
   assignedUserId String?
   Assigned       User?   @relation(fields: [assignedUserId], references: [id], onDelete: SetNull)
+  status         Stat    @default(OPEN)
 
   @@index([laneId])
   @@index([customerId])
